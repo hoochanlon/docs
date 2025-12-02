@@ -1,0 +1,78 @@
+---
+title: Astro-Strlight 简要配置
+---
+
+
+## 自定义样式
+
+[编辑按钮设置](https://starlight.astro.build/zh-cn/guides/customization/#%E7%BC%96%E8%BE%91%E9%93%BE%E6%8E%A5)以及自定义样式：https://starlight.astro.build/zh-cn/guides/css-and-tailwind/
+
+## front-matter 可省略部分
+
+在 astro blog 中 front-matter 中的 `description` 是不能被省略的，而在 astro starlight 是可以被省略的。
+
+
+```mdx title="\src\content\docs\index.mdx"
+---
+title: Starlight Notes
+description: 基于 Astro Starlight 构建的个人笔记文档
+template: splash # Remove or comment out this line to display the site sidebar on this page.
+hero:
+  tagline: 基于 Astro Starlight 构建的个人笔记文档
+  image:
+    file: ../../assets/houston.webp
+  actions:
+    - text: 进入笔记
+      link: /astro-starlight/example/
+      icon: right-arrow
+    - text: Read the Starlight docs
+      link: https://starlight.astro.build
+      icon: external
+      variant: minimal
+---
+```
+
+
+## 代码块
+
+### 代码显示行数
+
+参考：https://expressive-code.com/plugins/line-numbers/
+
+
+```
+pnpm add @expressive-code/plugin-line-numbers
+```
+
+创建 ec.config.mjs
+
+```mjs title="./ec.config.mjs"
+import { defineEcConfig } from 'astro-expressive-code'
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
+
+export default defineEcConfig({
+  plugins: [pluginLineNumbers()],
+})
+```
+
+在 `showLineNumbers ins={3,5-6} ` 位置处可更改侧边栏文章板块、文章标识、文章路由等信息。
+
+
+```js title=".\astro.config.mjs" showLineNumbers ins={3,5-6} 
+sidebar: [
+	{
+	 label: 'Astro-Strlight',
+	 items: [
+	    // Each item here is one entry in the navigation menu.
+	    { label: 'Astro-Strlight简要文档配置', slug: 'astro-starlight/example' },
+	  ],
+  },
+ {
+	 label: 'Reference',
+	 autogenerate: { directory: 'reference' },
+ },
+],
+```
+
+
+
