@@ -34,11 +34,11 @@ export default defineConfig({
         },
         sidebar: [
             {
-                label: 'Astro-Strlight',
+                label: 'Astro-Starlight',
                 items: [
                     // Each item here is one entry in the navigation menu.
-                    { label: 'Astro-Strlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
-                    { label: 'Astro-Strlight 写作脚本', slug: '20251202175510' },
+                    { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
+                    { label: 'Astro-Starlight 写作脚本', slug: '20251202175510' },
                 ],
             },
             {

@@ -1,5 +1,5 @@
 ---
-title: "Astro-Strlight 写作脚本"
+title: "Astro-Starlight 写作脚本"
 slug: "20251202175510"
 ---
 
