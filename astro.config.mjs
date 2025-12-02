@@ -7,6 +7,8 @@ import markdoc from '@astrojs/markdoc';
 
 // https://astro.build/config
 export default defineConfig({
+   site: 'https://hoochanlon.github.io',
+   base: 'starlight-notes',
       markdown: {
     rehypePlugins: [
       [
@@ -20,7 +22,7 @@ export default defineConfig({
   },
     integrations: [expressiveCode(), starlight({
         title: 'My Docs',
-        social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+        social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/hoochanlon' }],
         editLink: {
             baseUrl: 'https://github.com/hoochanlon/starlight-notes/edit/master',
         },
