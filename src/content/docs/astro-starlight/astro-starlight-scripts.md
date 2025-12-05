@@ -1,6 +1,6 @@
 ---
 title: "Astro-Starlight 写作脚本"
-slug: "20251202175510"
+# slug: "20251202175510"
 ---
 
 ## 文件定位
@@ -88,3 +88,18 @@ print(f"文章已创建：{filepath}")
 ```
 
 效果：以日期作为固定URL，文件不受文件夹移动所影响。
+
+## 解除slug
+
+如不启用 slug，同时也需注释文件的 front-matter
+
+```mjs title="\spiffy-solstice\astro.config.mjs" {1}
+// { label: 'Astro-Starlight 写作脚本', slug: '20251202175510' }, 
+```
+
+```markdown title="\content\docs\astro-starlight\astro-starlight-scripts.md" {3}
+---
+title: "Astro-Starlight 写作脚本"
+# slug: "20251202175510"
+---
+```

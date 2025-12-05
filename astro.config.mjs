@@ -36,11 +36,17 @@ export default defineConfig({
         },
         sidebar: [
             {
+                label: '欢迎',
+                items: [
+                    { label: '内容主页', slug: 'welcome' },
+                ],
+            },
+            {
                 label: 'Astro-Starlight',
                 items: [
                     // Each item here is one entry in the navigation menu.
                     { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
-                    { label: 'Astro-Starlight 写作脚本', slug: '20251202175510' },
+                    { label: 'Astro-Starlight 写作脚本', slug: 'astro-starlight/astro-starlight-scripts' },
                 ],
             },
             {
@@ -54,6 +60,7 @@ export default defineConfig({
                 label: 'fumadocs',
                 items: [
                     { label: 'fumadocs 简要配置', slug: 'fumadocs/fumadocs-example' },
+                    { label: 'fumadocs 目录路由配置', slug: 'fumadocs/fumadocs-route' },
                 ],
             },
         ],
