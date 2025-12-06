@@ -10,9 +10,21 @@ hero:
     - text: 个人博客
       link: https://hoochanlon.github.io
       icon: external
-    - text: 进入笔记
+    - text: 进入文档
       link: /starlight-notes/welcome
       icon: right-arrow
       # variant: minimal
 ---
 
+
+import { CardGrid, Card } from '@astrojs/starlight/components';
+
+
+<CardGrid stagger>
+	<Card title="令人愉悦的文档配置" icon="open-book">
+    易上手、构建快、高性能
+	</Card>
+	<Card title="完全支持：Markdown、Markdoc、MDX" icon="document">
+    兼容性佳，扩展性强
+	</Card>
+</CardGrid>
