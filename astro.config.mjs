@@ -4,7 +4,8 @@ import starlight from '@astrojs/starlight';
 import expressiveCode from 'astro-expressive-code';
 import rehypeExternalLinks from "rehype-external-links";
 import markdoc from '@astrojs/markdoc';
-import starlightImageZoom from 'starlight-image-zoom'
+import starlightImageZoom from 'starlight-image-zoom';
+import starlightThemeGalaxy from 'starlight-theme-galaxy';
 
 // https://astro.build/config
 export default defineConfig({
@@ -22,7 +23,10 @@ export default defineConfig({
     ],
   },
     integrations: [expressiveCode(), starlight({
-        plugins: [starlightImageZoom()],
+        plugins: [
+          starlightImageZoom(),
+          starlightThemeGalaxy(),
+        ],
         title: 'My Docs',
         locales: {
           root: {
