@@ -5,7 +5,7 @@ title: Fumadocs 目录路由配置
 ## 目录
 
 
-[提示]：对于习惯了用一个配置文件控制所有目录路由，以及可以根据 slug 来定位永久路由的管理方式，fumadocs 的路由逻辑简直抽象。需要不断摸索。路由迁移与Github Pages配置部分由AI生成。
+[提示]：对于习惯了用一个配置文件控制所有目录路由，以及可以根据 slug 来定位永久路由的管理方式，fumadocs 的路由逻辑简直抽象。需要不断摸索。docs->notes路由迁移、Github Pages、slug内容板块由AI生成。
 
 在 Fumadocs 中，当缺少 meta.json 文件时，系统会默认按照文件名的字母顺序来确定页面的展示顺序。你可以通过在文件名前添加数字或字母前缀（例如 01-xxx.mdx、a-intro.mdx）来手动控制排序。此外，在任意文件夹中创建 index.mdx 文件，即可直接将该文件夹作为内容板块来展示。
 
@@ -354,3 +354,412 @@ import { DefaultImage } from 'fumadocs-ui/og';
 3. 所有内部链接都使用了正确的路径
 
 
+## Slug 配置改造文档
+
+本文档详细说明了如何在 Fumadocs 项目中使用 `slug` 字段实现固定链接功能，以及如何在 `meta.json` 中使用 slug 引用页面。
+
+### 功能概述
+
+#### 核心功能
+
+1. **固定 URL 链接**：通过在 MDX 文件的 frontmatter 中设置 `slug` 字段，可以固定页面的 URL，即使文件重命名或移动文件夹，URL 也不会改变。
+
+2. **meta.json 中的 slug 引用**：在 `meta.json` 中可以直接使用 slug 来引用页面，文件重命名后无需更新 `meta.json`。
+
+#### 解决的问题
+
+- ✅ 文件重命名后，URL 保持不变
+- ✅ 文件夹移动后，URL 保持不变
+- ✅ `meta.json` 中使用 slug 引用，无需随文件路径变化而更新
+- ✅ 实现语义化的 URL 结构
+
+---
+
+### 实现原理
+
+#### 技术实现
+
+1. **扩展 Frontmatter Schema**（`source.config.ts`）
+   - 添加可选的 `slug` 字段，支持字符串或字符串数组
+
+2. **自定义 LoaderPlugin**（`lib/source.ts`）
+   - 读取 frontmatter 中的 `slug` 字段
+   - 建立 slug 到文件路径的映射
+   - 处理 `meta.json` 中的 slug 引用，自动转换为文件路径
+
+#### 工作流程
+
+```
+1. 读取所有 MDX 文件
+   ↓
+2. 提取 frontmatter 中的 slug 字段
+   ↓
+3. 建立 slug → 文件路径的映射
+   ↓
+4. 处理 meta.json，将 slug 引用替换为文件路径
+   ↓
+5. 生成最终的页面结构
+```
+
+---
+
+### 使用方法
+
+#### 1. 在 Frontmatter 中设置 Slug
+
+在 MDX 文件的 frontmatter 中添加 `slug` 字段：
+
+##### 方式 1：使用字符串（单个路径段）
+
+```yaml
+---
+title: 我的文章
+slug: my-article
+---
+```
+
+生成的 URL：`/notes/my-article`
+
+##### 方式 2：使用字符串（多个路径段，用斜杠分隔）
+
+```yaml
+---
+title: 我的文章
+slug: category/my-article
+---
+```
+
+生成的 URL：`/notes/category/my-article`
+
+##### 方式 3：使用数组（多个路径段）
+
+```yaml
+---
+title: 我的文章
+slug: ["category", "subcategory", "my-article"]
+---
+```
+
+生成的 URL：`/notes/category/subcategory/my-article`
+
+### 2. 在 meta.json 中使用 Slug 引用
+
+在 `meta.json` 的 `pages` 数组中，可以直接使用 slug 来引用页面：
+
+```json
+{
+  "title": "随笔",
+  "root": true,
+  "pages": [
+    "index",
+    "my-article"  // 使用 slug，而不是文件路径
+  ]
+}
+```
+
+**注意**：系统会自动识别 `pages` 中的值是否为 slug：
+- 如果匹配到 slug，自动转换为对应的文件路径
+- 如果是文件路径，保持原样
+
+---
+
+### 配置说明
+
+#### 1. source.config.ts
+
+扩展了 frontmatter schema 以支持 `slug` 字段：
+
+```typescript
+import { z } from 'zod';
+
+// 扩展 frontmatter schema 以支持可选的 slug 字段
+const customFrontmatterSchema = frontmatterSchema.extend({
+  slug: z.union([z.string(), z.array(z.string())]).optional(),
+});
+
+export const notes = defineDocs({
+  dir: 'content/notes',
+  docs: {
+    schema: customFrontmatterSchema,
+    // ...
+  },
+});
+```
+
+#### 2. lib/source.ts
+
+实现了 `customSlugsPlugin` 插件：
+
+```typescript
+function customSlugsPlugin(): LoaderPlugin {
+  // 建立 slug 到文件路径的映射
+  const slugToFileMap = new Map<string, string>();
+  const fullSlugToFileMap = new Map<string, string>();
+  
+  return {
+    enforce: 'pre',
+    transformStorage({ storage }) {
+      // 处理页面，设置 slugs 并建立映射
+      // 处理 meta.json，将 slug 引用替换为文件路径
+    },
+  };
+}
+```
+
+---
+
+### 使用示例
+
+#### 示例 1：基本使用
+
+**文件：`content/notes/essay/demo/index.mdx`**
+
+```yaml
+---
+title: Demo 页面
+description: 这是一个演示页面
+slug: demo-page
+---
+```
+
+**文件：`content/notes/essay/meta.json`**
+
+```json
+{
+  "title": "随笔",
+  "pages": [
+    "index",
+    "demo-page"  // 使用 slug
+  ]
+}
+```
+
+**结果**：
+- URL：`/notes/demo-page`
+- 即使将 `demo` 文件夹重命名为 `demo-v2`，URL 仍然保持不变
+
+#### 示例 2：多级路径
+
+**文件：`content/notes/essay/demo/index.mdx`**
+
+```yaml
+---
+title: Demo 页面
+slug: essay/demo-page
+---
+```
+
+**结果**：
+- URL：`/notes/essay/demo-page`
+- 即使文件移动到其他位置，URL 仍然保持不变
+
+#### 示例 3：在 meta.json 中使用完整路径
+
+**文件：`content/notes/essay/meta.json`**
+
+```json
+{
+  "title": "随笔",
+  "pages": [
+    "index",
+    "essay/demo-page"  // 使用完整的 slug 路径
+  ]
+}
+```
+
+系统会自动找到对应的文件，即使文件路径发生变化。
+
+---
+
+### 优势说明
+
+#### 1. 固定链接
+
+- **问题**：文件重命名或移动后，URL 会改变，导致外部链接失效
+- **解决**：使用 `slug` 字段，URL 固定不变
+- **示例**：`slug: "my-article"` 始终对应 `/notes/my-article`
+
+#### 2. 灵活的 URL 结构
+
+- **问题**：文件路径决定了 URL 结构，不够灵活
+- **解决**：可以通过 `slug` 自定义 URL 结构
+- **示例**：文件在 `content/notes/old-folder/article/index.mdx`，但 URL 可以是 `/notes/new-url`
+
+#### 3. meta.json 维护简化
+
+- **问题**：文件重命名后，需要更新 `meta.json` 中的引用
+- **解决**：使用 slug 引用，文件重命名后无需更新 `meta.json`
+- **示例**：`meta.json` 中使用 `"my-article"`，即使文件路径改变，仍然有效
+
+#### 4. 语义化 URL
+
+- **问题**：文件路径可能不够语义化（如 `article-2024-01-01`）
+- **解决**：使用 `slug` 创建更友好的 URL（如 `new-year-article`）
+
+---
+
+### 常见问题
+
+#### Q1: 如果不设置 slug，会怎样？
+
+**A**: 如果不设置 `slug`，Fumadocs 会使用默认的文件路径生成 URL。例如：
+- 文件：`content/notes/essay/demo/index.mdx`
+- URL：`/notes/essay/demo`
+
+#### Q2: slug 和文件路径可以不一致吗？
+
+**A**: 可以。`slug` 字段会覆盖默认的文件路径。例如：
+- 文件：`content/notes/essay/demo/index.mdx`
+- `slug: "my-custom-url"`
+- URL：`/notes/my-custom-url`（而不是 `/notes/essay/demo`）
+
+#### Q3: 在 meta.json 中，slug 和文件路径可以混用吗？
+
+**A**: 可以。`meta.json` 中的 `pages` 数组可以同时包含：
+- 文件路径：`"demo"`
+- slug：`"demo-page"`（如果存在对应的 slug）
+
+系统会自动识别并处理。
+
+#### Q4: 如果多个文件使用相同的 slug 会怎样？
+
+**A**: 后处理的文件会覆盖先处理的文件。建议确保每个 slug 唯一。
+
+#### Q5: slug 支持哪些字符？
+
+**A**: slug 支持 URL 安全的字符。建议使用：
+- 小写字母：`a-z`
+- 数字：`0-9`
+- 连字符：`-`
+- 下划线：`_`
+- 斜杠：`/`（用于多级路径）
+
+避免使用：
+- 空格（使用连字符代替）
+- 特殊字符（如 `@`, `#`, `$` 等）
+
+#### Q6: 如何迁移现有内容到使用 slug？
+
+**A**: 迁移步骤：
+
+1. **为现有文件添加 slug**：
+   ```yaml
+   ---
+   title: 现有文章
+   slug: existing-article  # 使用当前 URL 的路径段
+   ---
+   ```
+
+2. **更新 meta.json**（可选）：
+   ```json
+   {
+     "pages": [
+       "existing-article"  // 使用 slug 而不是文件路径
+     ]
+   }
+   ```
+
+3. **验证**：确保所有链接仍然正常工作
+
+---
+
+### 技术细节
+
+#### Slug 映射机制
+
+系统建立了两个映射表：
+
+1. **slugToFileMap**：最后一段 slug → 文件路径
+   - 用于快速匹配单个路径段
+   - 例如：`"demo-page"` → `"essay/demo"`
+
+2. **fullSlugToFileMap**：完整 slug 路径 → 文件路径
+   - 用于精确匹配完整路径
+   - 例如：`"essay/demo-page"` → `"essay/demo"`
+
+#### meta.json 处理逻辑
+
+1. 遍历 `meta.json` 中的 `pages` 数组
+2. 对于每个条目：
+   - 首先尝试完整路径匹配
+   - 如果失败，尝试最后一段匹配
+   - 如果找到匹配，转换为相对文件路径
+   - 如果未找到，保持原样（作为文件路径处理）
+
+#### 相对路径计算
+
+系统会自动计算相对于 `meta.json` 所在目录的文件路径：
+
+- `meta.json` 在 `essay/`，文件在 `essay/demo/` → 返回 `"demo"`
+- `meta.json` 在 `essay/`，文件在 `essay/` → 返回 `"index"`
+
+---
+
+### 最佳实践
+
+#### 1. 使用有意义的 slug
+
+```yaml
+# ✅ 推荐
+slug: getting-started
+slug: api-reference
+slug: advanced-topics
+
+# ❌ 不推荐
+slug: page1
+slug: doc-2024-01-01
+slug: temp
+```
+
+#### 2. 保持 slug 简洁
+
+```yaml
+# ✅ 推荐
+slug: quick-start
+
+# ❌ 不推荐
+slug: how-to-get-started-with-our-amazing-product-in-5-minutes
+```
+
+#### 3. 使用一致的命名风格
+
+```yaml
+# ✅ 推荐：使用连字符
+slug: api-reference
+slug: user-guide
+
+# 或者使用下划线（保持一致）
+slug: api_reference
+slug: user_guide
+```
+
+#### 4. 在 meta.json 中优先使用 slug
+
+```json
+{
+  "pages": [
+    "index",
+    "getting-started",  // ✅ 使用 slug
+    "api-reference"     // ✅ 使用 slug
+  ]
+}
+```
+
+这样即使文件重命名，`meta.json` 也不需要更新。
+
+---
+
+### 相关文件
+
+- `source.config.ts` - Frontmatter schema 配置
+- `lib/source.ts` - LoaderPlugin 实现
+- `content/notes/**/*.mdx` - MDX 内容文件
+- `content/notes/**/meta.json` - 导航配置文件
+
+---
+
+### 参考资料
+
+- [Fumadocs Source API](https://fumadocs.dev/docs/headless/source-api)
+- [Fumadocs Loader Plugins](https://fumadocs.dev/docs/headless/source-api#loader-plugins)
+- [Zod Schema](https://zod.dev/) - 用于 schema 验证
