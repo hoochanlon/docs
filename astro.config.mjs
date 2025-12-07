@@ -12,7 +12,7 @@ import starlightThemeFlexoki from 'starlight-theme-flexoki';
 // https://astro.build/config
 export default defineConfig({
    site: 'https://hoochanlon.github.io',
-   base: 'starlight-notes',
+   base: 'docs',
     markdown: {
       rehypePlugins: [
         [
