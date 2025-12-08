@@ -1,10 +1,12 @@
 @import url('https://cdn.jsdelivr.net/gh/hoochanlon/fonts@refs/heads/main/assets/Mengshen-Regular/result.css');
-
+@import url('https://cdn.jsdelivr.net/gh/hoochanlon/fonts@main/assets/JetBrainsMono/result.css');
+@import url('https://cdn.jsdelivr.net/gh/hoochanlon/fonts@main/assets/MiSans-Regular/result.css');
 
 * {
     font-family: 
         "Mengshen-Regular",
 }
+
 
 /* 中文标题字体大小 */
 h1 {

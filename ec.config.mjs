@@ -25,6 +25,8 @@ export default defineEcConfig({
     // 这里可以微调边框、代码文字大小等
     borderRadius: '0.5rem',
     codeFontSize: '0.95rem',
+    // 设置代码块字体，英文字体使用 JetBrainsMono，中文字体使用 MiSans
+    codeFontFamily: '"JetBrains Mono", "MiSans"',
     // ...
   },
 })
