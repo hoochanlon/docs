@@ -23,7 +23,99 @@ import { Icon } from '@astrojs/starlight/components'
 **重要提示**：本文档中的所有组件示例都需要在 `.mdx` 文件中使用，`.md` 文件不支持 JSX 组件。所有 `import` 语句必须放在文件顶部。
 :::
 
+## CSS 选择器精确匹配技巧
 
+### 如何只选择侧边栏中的 Badge？
+
+如果你只想针对侧边栏中的 `sl-badge` 设置样式，而不影响页面内容中的 badge，需要使用**后代选择器**来限定范围：
+
+```css
+/* ✅ 方法 1：使用侧边栏 ID（最推荐，最稳定） */
+#starlight__sidebar .sl-badge {
+    font-size: 10px !important;
+}
+
+/* ✅ 方法 2：使用侧边栏类名 */
+.sl-sidebar .sl-badge {
+    font-size: 10px !important;
+}
+
+/* ✅ 方法 3：使用导航属性 */
+nav[aria-label="Main"] .sl-badge {
+    font-size: 10px !important;
+}
+```
+
+**选择器优先级说明：**
+- `.sl-badge` - 会影响所有 badge（包括侧边栏和内容区）
+- `#starlight__sidebar .sl-badge` - 只影响侧边栏内的 badge（ID 选择器，最稳定）
+- `.sl-sidebar .sl-badge` - 只影响侧边栏内的 badge（类选择器）
+- `nav[aria-label="Main"] .sl-badge` - 只影响主导航内的 badge（属性选择器）
+
+### 其他精确选择示例
+
+```css
+/* 只选择侧边栏中的链接 - 使用 ID（最稳定） */
+#starlight__sidebar a {
+    font-size: 16px;
+}
+
+/* 只选择侧边栏中的链接 - 使用类名 */
+.sl-sidebar a {
+    font-size: 16px;
+}
+
+/* 只选择内容区域的标题 */
+.sl-content h1 {
+    font-size: 24px;
+}
+
+/* 只选择头部中的按钮 */
+.sl-header button {
+    /* 样式 */
+}
+
+/* 只选择特定容器内的元素 */
+.sl-content .sl-badge {
+    /* 只影响内容区的 badge，不影响侧边栏 */
+}
+```
+
+### Starlight 常用 ID 选择器
+
+Starlight 提供了一些稳定的 ID 选择器，优先使用这些：
+
+```css
+/* 侧边栏 */
+#starlight__sidebar {
+    /* 样式 */
+}
+
+/* 目录 */
+#starlight__on-this-page {
+    /* 样式 */
+}
+
+/* 使用示例 */
+#starlight__sidebar .sl-badge {
+    font-size: 10px;
+}
+
+#starlight__sidebar a {
+    font-size: 16px;
+}
+```
+
+### 选择器优先级规则
+
+CSS 选择器的优先级（从低到高）：
+1. 标签选择器：`div`、`a`、`h1`
+2. 类选择器：`.sl-badge`、`.sl-sidebar`
+3. ID 选择器：`#starlight__on-this-page`
+4. 属性选择器：`[data-open-modal]`
+5. 组合选择器：`.sl-sidebar .sl-badge`（更具体 = 更高优先级）
+
+**原则**：选择器越具体，优先级越高，越不容易被覆盖。
 
 ## 1. 盘白（Asides）
 

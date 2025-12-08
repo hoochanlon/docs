@@ -2,6 +2,7 @@
 title: Astro-Starlight 简要配置
 ---
 
+注：从"Starlight Frontmatter 配置选项"开始的内容是AI生成的调试示例。
 
 ## 自定义样式
 
@@ -287,6 +288,224 @@ head:
 ---
 ```
 
+
+## Starlight 自定义 CSS 选择器策略
+
+在 Starlight 中自定义样式时，**不要使用硬编码的哈希类名**（如 `.astro-xouerbd5`），因为这些哈希值在每次构建时都会变化，导致样式在 GitHub Pages 等生产环境中失效。
+
+### 问题分析
+
+#### 为什么哈希类名会变化？
+
+Astro 使用作用域 CSS（Scoped CSS）来避免样式冲突。每次构建时，Astro 会：
+1. 为每个组件生成唯一的哈希类名
+2. 根据文件内容计算哈希值
+3. 即使内容没变，构建环境不同也可能产生不同的哈希值
+
+**示例（不推荐）：**
+```css
+/* ❌ 错误：哈希值会变化 */
+.astro-xouerbd5 {
+    font-size: 16px;
+}
+```
+
+### 正确的选择器策略
+
+#### 1. 使用 Starlight 的标准类名（推荐）
+
+Starlight 提供了稳定的类名前缀，如 `.sl-` 开头的类名：
+
+```css
+/* ✅ 正确：使用 Starlight 标准类名 */
+.sl-sidebar a {
+    font-size: 16px;
+}
+
+.sl-badge {
+    font-size: 10px;
+}
+
+.sl-header {
+    display: flex;
+}
+```
+
+#### 2. 使用 ID 选择器（最稳定）
+
+ID 选择器不会变化，是最稳定的选择方式：
+
+```css
+/* ✅ 正确：ID 选择器 */
+#starlight__on-this-page {
+    font-size: 18px;
+}
+```
+
+#### 3. 使用数据属性选择器
+
+许多 Starlight 组件都有数据属性：
+
+```css
+/* ✅ 正确：使用数据属性 */
+button[data-open-modal] {
+    min-width: 300px;
+}
+
+nav[aria-label="Main"] a {
+    font-size: 16px;
+}
+```
+
+#### 4. 使用语义化 HTML 标签 + 容器
+
+结合 HTML 标签和容器类名：
+
+```css
+/* ✅ 正确：语义化选择器 */
+.sl-content h1 {
+    font-size: 24px;
+}
+
+.sl-sidebar nav a.large {
+    font-size: 18px;
+}
+```
+
+#### 5. 使用属性选择器组合
+
+结合多个属性来精确选择：
+
+```css
+/* ✅ 正确：属性组合 */
+header[data-theme] {
+    display: flex;
+}
+
+@media (min-width: 50rem) {
+    .sl-header button[data-open-modal] {
+        min-width: 300px;
+    }
+}
+```
+
+### 如何查找正确的选择器
+
+#### 方法 1：浏览器开发者工具
+
+1. 打开浏览器开发者工具（F12）
+2. 使用元素选择器选择目标元素
+3. 查看元素的类名、ID 和数据属性
+4. 优先选择：
+   - 以 `.sl-` 开头的类名
+   - `id` 属性
+   - `data-*` 属性
+   - `aria-*` 属性
+
+#### 方法 2：查看 Starlight 源码
+
+查看 Starlight 的组件源码，了解稳定的类名结构。
+
+#### 方法 3：使用通配符选择器（谨慎使用）
+
+如果必须使用哈希类名，可以使用属性选择器：
+
+```css
+/* ⚠️ 谨慎使用：匹配所有以 astro- 开头的类 */
+[class*="astro-"] {
+    /* 样式 */
+}
+```
+
+### GitHub Pages 部署注意事项
+
+#### 1. 确保 `.nojekyll` 文件存在
+
+在项目根目录创建 `.nojekyll` 文件，禁用 Jekyll 处理：
+
+```bash
+touch .nojekyll
+```
+
+#### 2. 检查 base 路径
+
+确保 `astro.config.mjs` 中的 `base` 配置正确：
+
+```javascript
+export default defineConfig({
+  site: 'https://hoochanlon.github.io',
+  base: 'docs',  // 如果仓库名不是 username.github.io
+  // ...
+})
+```
+
+#### 3. CSS 文件路径
+
+确保 `customCss` 路径正确：
+
+```javascript
+starlight({
+  customCss: ['./src/styles/custom.css'],  // 相对路径
+})
+```
+
+#### 4. 构建后检查
+
+构建后检查 `dist/` 目录，确认 CSS 文件已正确生成和引用。
+
+### 完整示例
+
+```css
+/* ============================================
+   推荐的选择器策略示例
+   ============================================ */
+
+/* 1. 使用 Starlight 标准类名 */
+.sl-sidebar a {
+    font-size: 16px;
+}
+
+.sl-badge {
+    font-size: 10px;
+}
+
+/* 2. 使用 ID 选择器 */
+#starlight__on-this-page {
+    font-size: 18px;
+}
+
+/* 3. 使用数据属性 */
+button[data-open-modal] {
+    min-width: 300px;
+}
+
+/* 4. 使用语义化选择器 */
+.sl-content h1 {
+    font-size: 24px;
+}
+
+/* 5. 组合选择器提高优先级 */
+.sl-sidebar nav a.large {
+    font-size: 18px !important;
+}
+```
+
+### 常见 Starlight 类名参考
+
+- `.sl-sidebar` - 侧边栏容器
+- `.sl-content` - 主内容区域
+- `.sl-header` - 头部
+- `.sl-badge` - 徽章
+- `.sl-page-title` - 页面标题
+- `#starlight__on-this-page` - 目录容器
+
+### 调试技巧
+
+1. **本地构建测试**：运行 `npm run build` 后检查 `dist/` 目录
+2. **检查控制台**：查看是否有 CSS 加载错误
+3. **网络面板**：确认 CSS 文件是否正确加载
+4. **元素检查**：使用开发者工具查看实际渲染的类名
+
 ## 静态图片资源管理
 
 在 Astro Starlight 中，有多种方式管理静态图片资源。
@@ -485,3 +704,5 @@ hero:
 - 大图片使用 CDN 或图片优化服务
 - 使用 Astro 的 Image 组件自动优化本地图片
 - 为所有图片添加有意义的 `alt` 文本
+
+

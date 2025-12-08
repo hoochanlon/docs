@@ -80,48 +80,95 @@ div {
     font-size: 16px;
     line-height: 1.6;
 }
+/* ============================================
+   头部和搜索框样式 - 使用稳定的选择器
+   ============================================ */
 
-/* 侧边栏文章板块字体 */
-.large.astro-xouerbd5{
-    font-size: 18px;
-}
+/* 搜索框居中 - 使用 Grid 布局（推荐方法） */
 
-.astro-xouerbd5{
-    font-size: 16px;
-}
 
-/* 目录字体 */
-#starlight__on-this-page{
-    font-size: 18px;
-}
-.astro-eddxjfjq{
-    font-size: 15px;
-}
-
-/* 方法1：让中间容器占据剩余空间并居中内容 */
-.header.astro-3nk7nyc2 {
+/* 搜索按钮居中定位 */
+.header > div:first-child {
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
 }
 
-/* 搜索按钮增加宽度，让它看起来更长 */
-/* 桌面端（大于等于 50rem）增加最小宽度，移动端保持原有样式 */
+/* 搜索按钮变长 - 使用数据属性选择器（稳定） */
+button[data-open-modal] {
+    min-width: 400px !important;
+    max-width: 500px !important;
+    width: auto;
+}
+
+
+/* ============================================
+   侧边栏样式 - 使用稳定的选择器策略
+   ============================================ */
+
+/* 侧边栏链接字体大小 - 使用 ID 选择器（最稳定） */
+#starlight__sidebar a {
+    font-size: 16px;
+}
+
+/* 侧边栏大号链接（通常用于分组标题） */
+#starlight__sidebar a.large {
+    font-size: 18px;
+}
+
+/* 备用选择器：使用属性选择器 */
+nav[aria-label="Main"] a {
+    font-size: 16px;
+}
+
+nav[aria-label="Main"] a.large {
+    font-size: 18px;
+}
+
+/* ============================================
+   目录样式 - 使用 ID 选择器（最稳定）
+   ============================================ */
+
+/* 目录标题 */
+#starlight__on-this-page {
+    font-size: 18px;
+}
+
+/* 目录链接 - 使用 ID + 后代选择器 */
+#starlight__on-this-page a {
+    font-size: 15px;
+}
+
+/* ============================================
+   搜索按钮样式 - 使用数据属性选择器
+   ============================================ */
+
+/* 搜索按钮增加宽度 - 响应式设置 */
 @media (min-width: 50rem) {
-    button.astro-gsshxjg6[data-open-modal] {
-        min-width: 300px;
-        /* 保持原有的 width: 100% 和 max-width: 22rem */
-        /* 只增加最小宽度，不影响响应式布局 */
+    button[data-open-modal],
+    .sl-header button[data-open-modal],
+    .header button[data-open-modal] {
+        min-width: 400px !important;
+        max-width: 500px !important;
+        width: auto;
     }
 }
 
-/* 文档标题 */
-.astro-cgsp6aaj{
-    font-size: 24px;
-}
+/* ============================================
+   文档标题样式
+   ============================================ */
+/* 1. 结合 site-title 类和 translate 属性 */
+.site-title span[translate="no"] {
+    font-size: 20px !important;
+  }
+  
 
-/* Badge字体大小，精确匹配这两个类名 */
-.astro-xouerbd5.astro-takgiimm{
-    font-size: 10px !important;
-} 
+/* ============================================
+   Badge 样式 - 只针对侧边栏中的 Badge
+   ============================================ */
+
+/* 只选择侧边栏内的 Badge - 使用 ID 选择器（最稳定） */
+#starlight__sidebar .sl-badge {
+    font-size: 9px !important;
+}
