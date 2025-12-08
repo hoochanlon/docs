@@ -1,7 +1,6 @@
-/* 苹方字体 CDN - 使用系统字体栈（苹方是 macOS/iOS 系统字体） */
 @import url('https://cdn.jsdelivr.net/gh/hoochanlon/fonts@refs/heads/main/assets/Mengshen-Regular/result.css');
 
-/* 全局字体设置 - 优先使用苹方，回退到其他中文字体 */
+
 * {
     font-family: 
         "Mengshen-Regular",
@@ -50,7 +49,7 @@ h6 {
     margin: 0.6em 0 0.3em 0;
 }
 
-/* 中文段落字体大小 */
+
 p {
     font-size: 16px;
     line-height: 1.8;
@@ -58,7 +57,7 @@ p {
     color: inherit;
 }
 
-/* 中文链接字体大小 */
+
 a {
     font-size: 16px;
     line-height: 1.8;
@@ -70,7 +69,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* span 标签字体大小（通常用于内联文本） */
+
 span {
     font-size: 16px;
     line-height: inherit;
@@ -83,8 +82,12 @@ div {
 }
 
 /* 侧边栏文章板块字体 */
-.astro-xouerbd5{
+.large.astro-xouerbd5{
     font-size: 18px;
+}
+
+.astro-xouerbd5{
+    font-size: 16px;
 }
 
 /* 目录字体 */
@@ -92,7 +95,7 @@ div {
     font-size: 18px;
 }
 .astro-eddxjfjq{
-    font-size: 16px;
+    font-size: 15px;
 }
 
 /* 方法1：让中间容器占据剩余空间并居中内容 */
@@ -117,3 +120,8 @@ div {
 .astro-cgsp6aaj{
     font-size: 24px;
 }
+
+/* Badge字体大小，精确匹配这两个类名 */
+.astro-xouerbd5.astro-takgiimm{
+    font-size: 10px !important;
+} 

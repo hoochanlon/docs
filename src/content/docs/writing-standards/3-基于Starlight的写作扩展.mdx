@@ -1,0 +1,515 @@
+---
+title: "基于Starlight的写作扩展"
+slug: writing-standards/starlight-writing-extensions
+sidebar:
+  badge:
+    text: "Demo"
+    variant: "note"
+---
+
+import { Badge } from '@astrojs/starlight/components'
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+import { FileTree } from '@astrojs/starlight/components'
+import { LinkButton } from '@astrojs/starlight/components'
+import { Steps } from '@astrojs/starlight/components'
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+import { Icon } from '@astrojs/starlight/components'
+
+## 结论前置
+
+这套符号体系高度依赖特定平台的渲染支持，一旦切换平台便会失效。这本质上是文档工具的一种"软性锁定"，通过培养用户的表达习惯来增加迁移成本。因此，最好将其整理为一份独立的备忘手册，以便在不同环境中随时取用。
+
+:::tip
+**重要提示**：本文档中的所有组件示例都需要在 `.mdx` 文件中使用，`.md` 文件不支持 JSX 组件。所有 `import` 语句必须放在文件顶部。
+:::
+
+
+
+## 1. 盘白（Asides）
+
+盘白用于突出显示重要信息，包括提示、警告、注意事项等。
+
+### 代码示例
+
+```mdx
+:::note
+这是一个提示框，用于显示一般性信息。
+:::
+
+:::tip
+这是一个技巧提示框，用于显示有用的技巧或建议。
+:::
+
+:::caution
+这是一个警告框，用于显示需要注意的事项。
+:::
+
+:::danger
+这是一个危险警告框，用于显示可能导致严重后果的操作。
+:::
+```
+
+### 实际效果
+
+:::note
+这是一个提示框，用于显示一般性信息。
+:::
+
+:::tip
+这是一个技巧提示框，用于显示有用的技巧或建议。
+:::
+
+:::caution
+这是一个警告框，用于显示需要注意的事项。
+:::
+
+:::danger
+这是一个危险警告框，用于显示可能导致严重后果的操作。
+:::
+
+## 2. 徽章（Badges）
+
+徽章用于标记状态、版本或重要标签。
+
+### 代码示例
+
+```mdx
+import { Badge } from '@astrojs/starlight/components'
+
+- <Badge text="新功能" variant="tip" size="small" />
+- <Badge text="已弃用" variant="caution" size="medium" />
+- <Badge text="演示" variant="note" size="large" />
+- <Badge text="200" variant="success" />
+- <Badge text="实验性" variant="danger" />
+```
+
+### 参数说明
+
+- `text`: 徽章显示的文本
+- `variant`: 样式变体，可选值：`tip`、`caution`、`note`、`success`、`danger`
+- `size`: 尺寸，可选值：`small`、`medium`、`large`
+
+### 实际效果
+
+- <Badge text="新功能" variant="tip" size="small" />
+- <Badge text="已弃用" variant="caution" size="medium" />
+- <Badge text="演示" variant="note" size="large" />
+- <Badge text="200" variant="success" />
+- <Badge text="实验性" variant="danger" />
+
+## 3. 卡片（Cards）
+
+卡片用于组织和展示相关内容。
+
+### 单个卡片
+
+#### 代码示例
+
+```mdx
+import { Card } from '@astrojs/starlight/components'
+
+<Card title="卡片标题">
+  这是卡片的内容，可以使用 **任何** Markdown 语法。
+</Card>
+```
+
+#### 实际效果
+
+<Card title="卡片标题">
+  这是卡片的内容，可以使用 **任何** Markdown 语法。
+</Card>
+
+### 卡片网格
+
+#### 代码示例
+
+```mdx
+import { CardGrid, Card } from '@astrojs/starlight/components'
+
+<CardGrid>
+  <Card title="卡片 1" icon="star">
+    第一个卡片的内容。
+  </Card>
+  <Card title="卡片 2" icon="moon">
+    第二个卡片的内容。
+  </Card>
+  <Card title="卡片 3" icon="rocket">
+    第三个卡片的内容。
+  </Card>
+</CardGrid>
+```
+
+#### 实际效果
+
+<CardGrid>
+  <Card title="卡片 1" icon="star">
+    第一个卡片的内容。
+  </Card>
+  <Card title="卡片 2" icon="moon">
+    第二个卡片的内容。
+  </Card>
+  <Card title="卡片 3" icon="rocket">
+    第三个卡片的内容。
+  </Card>
+</CardGrid>
+
+### 链接卡片
+
+#### 代码示例
+
+```mdx
+import { LinkCard } from '@astrojs/starlight/components'
+
+<LinkCard
+  title="链接标题"
+  description="这是链接的描述信息。"
+  href="/docs/welcome"
+/>
+```
+
+#### 实际效果
+
+<LinkCard
+  title="链接标题"
+  description="这是链接的描述信息。"
+  href="/docs/welcome"
+/>
+
+### 链接卡片网格
+
+#### 代码示例
+
+```mdx
+import { CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+<CardGrid>
+  <LinkCard title="快速开始" href="/docs/getting-started" />
+  <LinkCard title="API 参考" href="/docs/api" />
+  <LinkCard title="常见问题" href="/docs/faq" />
+</CardGrid>
+```
+
+#### 实际效果
+
+<CardGrid>
+  <LinkCard title="快速开始" href="/docs/welcome" />
+  <LinkCard title="API 参考" href="/docs/welcome" />
+  <LinkCard title="常见问题" href="/docs/welcome" />
+</CardGrid>
+
+## 4. 图标（Icons）
+
+图标用于增强视觉效果。
+
+### 代码示例
+
+```mdx
+import { Icon } from '@astrojs/starlight/components'
+
+<Icon name="seti:lock" />
+<Icon name="rocket" />
+<Icon name="moon" />
+```
+
+### 实际效果
+
+<Icon name="seti:lock" /> 锁定图标
+<Icon name="rocket" /> 火箭图标
+<Icon name="moon" /> 月亮图标
+
+:::tip
+图标名称可以使用 Starlight 内置图标或 Seti UI 图标集。更多图标请参考 [Starlight 图标文档](https://starlight.astro.build/components/icon/)。
+:::
+
+## 5. 链接按钮（Link Buttons）
+
+链接按钮用于创建醒目的操作链接。
+
+### 代码示例
+
+```mdx
+import { LinkButton } from '@astrojs/starlight/components'
+
+<LinkButton href="/docs/getting-started" icon="rocket">
+  开始使用
+</LinkButton>
+
+<LinkButton href="/docs/api" variant="secondary" icon="external">
+  查看 API
+</LinkButton>
+
+<LinkButton href="/docs/faq" variant="minimal" icon="external">
+  常见问题
+</LinkButton>
+```
+
+### 参数说明
+
+- `href`: 链接地址
+- `icon`: 图标名称
+- `variant`: 样式变体，可选值：`primary`（默认）、`secondary`、`minimal`
+
+### 实际效果
+
+<LinkButton href="/docs/welcome" icon="rocket">
+  开始使用
+</LinkButton>
+
+<LinkButton href="/docs/welcome" variant="secondary" icon="external">
+  查看 API
+</LinkButton>
+
+<LinkButton href="/docs/welcome" variant="minimal" icon="external">
+  常见问题
+</LinkButton>
+
+## 6. 步骤（Steps）
+
+步骤组件用于创建分步骤的指南。
+
+### 代码示例
+
+```mdx
+import { Steps } from '@astrojs/starlight/components'
+
+<Steps>
+
+1. 第一步：安装依赖
+
+   \`\`\`bash
+   npm install astro
+   \`\`\`
+
+2. 第二步：创建配置文件
+
+   \`\`\`bash
+   touch astro.config.mjs
+   \`\`\`
+
+3. 第三步：启动开发服务器
+
+   \`\`\`bash
+   npm run dev
+   \`\`\`
+
+</Steps>
+```
+
+### 实际效果
+
+<Steps>
+
+1. 第一步：安装依赖
+
+   ```bash
+   npm install astro
+   ```
+
+2. 第二步：创建配置文件
+
+   ```bash
+   touch astro.config.mjs
+   ```
+
+3. 第三步：启动开发服务器
+
+   ```bash
+   npm run dev
+   ```
+
+</Steps>
+
+## 7. 标签页（Tabs）
+
+标签页用于组织多个相关的内容选项。
+
+### 代码示例
+
+```mdx
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+
+<Tabs>
+
+<TabItem label="npm" icon="seti:npm">
+
+\`\`\`bash
+npm install starlight-theme-rapide
+\`\`\`
+
+</TabItem>
+
+<TabItem label="pnpm" icon="pnpm">
+
+\`\`\`bash
+pnpm add starlight-theme-rapide
+\`\`\`
+
+</TabItem>
+
+<TabItem label="Yarn" icon="seti:yarn">
+
+\`\`\`bash
+yarn add starlight-theme-rapide
+\`\`\`
+
+</TabItem>
+
+</Tabs>
+```
+
+### 实际效果
+
+<Tabs>
+
+<TabItem label="npm" icon="seti:npm">
+
+```bash
+npm install starlight-theme-rapide
+```
+
+</TabItem>
+
+<TabItem label="pnpm" icon="pnpm">
+
+```bash
+pnpm add starlight-theme-rapide
+```
+
+</TabItem>
+
+<TabItem label="Yarn" icon="seti:yarn">
+
+```bash
+yarn add starlight-theme-rapide
+```
+
+</TabItem>
+
+</Tabs>
+
+## 8. 文件树（File Tree）
+
+文件树用于展示项目结构。
+
+### 代码示例
+
+```mdx
+import { FileTree } from '@astrojs/starlight/components'
+
+<FileTree>
+
+- astro.config.mjs **重要配置文件**
+- package.json
+- README.md
+- src
+  - components
+    - **Header.astro**
+    - Footer.astro
+  - content
+    - docs
+      - index.mdx
+- public
+  - favicon.svg
+
+</FileTree>
+```
+
+### 实际效果
+
+<FileTree>
+
+- astro.config.mjs **重要配置文件**
+- package.json
+- README.md
+- src
+  - components
+    - **Header.astro**
+    - Footer.astro
+  - content
+    - docs
+      - index.mdx
+- public
+  - favicon.svg
+
+</FileTree>
+
+## 9. 详细信息（Details）
+
+详细信息用于创建可折叠的内容区域。
+
+### 代码示例
+
+```mdx
+<details>
+<summary>点击展开查看详细信息</summary>
+
+这里是被折叠的内容，可以包含任何 Markdown 语法，包括：
+
+- 列表项
+- **粗体文本**
+- [链接](https://example.com)
+
+\`\`\`js
+// 甚至代码块
+const example = 'code'
+\`\`\`
+
+</details>
+```
+
+### 实际效果
+
+<details>
+<summary>点击展开查看详细信息</summary>
+
+这里是被折叠的内容，可以包含任何 Markdown 语法，包括：
+
+- 列表项
+- **粗体文本**
+- [链接](https://example.com)
+
+```js
+// 甚至代码块
+const example = 'code'
+```
+
+</details>
+
+## 完整示例模板
+
+以下是一个完整的 `.mdx` 文件模板，包含所有组件的导入：
+
+```mdx
+---
+title: "页面标题"
+slug: page-slug
+---
+
+import { Badge } from '@astrojs/starlight/components'
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+import { FileTree } from '@astrojs/starlight/components'
+import { LinkButton } from '@astrojs/starlight/components'
+import { Steps } from '@astrojs/starlight/components'
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+import { Icon } from '@astrojs/starlight/components'
+```
+
+
+
+## 页面内容
+
+使用上述组件来丰富你的文档内容。
+
+## 注意事项
+
+1. **文件格式**：所有使用组件的文件必须是 `.mdx` 格式，不能是 `.md` 格式
+2. **导入位置**：所有 `import` 语句必须放在文件顶部，frontmatter 之后
+3. **标签闭合**：所有 JSX 标签必须正确闭合，例如 `</LinkButton>` 不能写成 `</LinkButton`
+4. **组件嵌套**：组件可以嵌套使用，但要注意正确的结构
+5. **Markdown 兼容**：组件内部可以使用标准的 Markdown 语法
+
+## 参考资源
+
+- [Starlight 组件文档](https://starlight.astro.build/components/)
+- [Starlight 内容编写指南](https://starlight.astro.build/guides/authoring-content/)
+- [MDX 文档](https://mdxjs.com/)
