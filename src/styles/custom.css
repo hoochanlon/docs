@@ -80,12 +80,10 @@ div {
     font-size: 16px;
     line-height: 1.6;
 }
+
 /* ============================================
    头部和搜索框样式 - 使用稳定的选择器
    ============================================ */
-
-/* 搜索框居中 - 使用 Grid 布局（推荐方法） */
-
 
 /* 搜索按钮居中定位 */
 .header > div:first-child {
@@ -107,27 +105,21 @@ button[data-open-modal] {
    侧边栏样式 - 使用稳定的选择器策略
    ============================================ */
 
-/* 侧边栏链接字体大小 - 使用 ID 选择器（最稳定） */
-#starlight__sidebar a {
+
+/* 侧边栏一级导航字体大小 */
+#starlight__sidebar .large {
+    font-size: 19px;
+}
+/* 控制所有侧边栏文字 */
+#starlight__sidebar span {
     font-size: 16px;
 }
+  
+  
 
-/* 侧边栏大号链接（通常用于分组标题） */
-#starlight__sidebar a.large {
-    font-size: 18px;
-}
-
-/* 备用选择器：使用属性选择器 */
-nav[aria-label="Main"] a {
-    font-size: 16px;
-}
-
-nav[aria-label="Main"] a.large {
-    font-size: 18px;
-}
 
 /* ============================================
-   目录样式 - 使用 ID 选择器（最稳定）
+   目录样式 
    ============================================ */
 
 /* 目录标题 */
@@ -135,9 +127,9 @@ nav[aria-label="Main"] a.large {
     font-size: 18px;
 }
 
-/* 目录链接 - 使用 ID + 后代选择器 */
-#starlight__on-this-page a {
-    font-size: 15px;
+/* 通过父级的稳定类名来控制 */
+starlight-toc nav span {
+  font-size: 15px; /* 设置目录整体字体大小 */
 }
 
 /* ============================================
@@ -163,6 +155,11 @@ nav[aria-label="Main"] a.large {
     font-size: 20px !important;
   }
   
+/* 标题锚点图标大小与间距 */
+.sl-markdown-content .sl-heading-wrapper {
+    --sl-anchor-icon-size: 1.35em;  /* 默认约 0.83em，调大一点 */
+}
+
 
 /* ============================================
    Badge 样式 - 只针对侧边栏中的 Badge

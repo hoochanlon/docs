@@ -56,13 +56,14 @@ export default defineConfig({
                 items: [
                     { label: '电子书层级内容用语约定', slug: 'writing-standards/ebook-content-guidelines' },
                     { label: '盘白清晰表达方式约定', slug: 'writing-standards/content-emphasis-guidelines' },
-                    { label: '基于Starlight的写作扩展', slug: 'writing-standards/starlight-writing-extensions' },
+                    
                 ],
             },
             {
                 label: 'Astro-Starlight',
                 items: [
-                    { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
+                    { label: 'Astro-Starlight 相关配置', slug: 'astro-starlight/astro-starlight-example' },
+                    { label: '基于Starlight的写作扩展', slug: 'astro-starlight/starlight-writing-extensions'},
                     { label: 'Astro-Starlight 写作脚本', slug: 'astro-starlight/astro-starlight-scripts' },
                 ],
             },
