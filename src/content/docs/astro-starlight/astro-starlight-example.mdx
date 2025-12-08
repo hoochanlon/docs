@@ -1,172 +1,109 @@
 ---
-title: Astro-Starlight 相关配置
+title: Astro-Starlight 简要配置
 ---
 
-注：从"Starlight Frontmatter 配置选项"开始的内容是AI生成的调试示例。
+## 快速入门
 
-## 自定义样式
+以下是 Starlight 的几个核心功能配置入口，可直接点击链接查看官方文档：
 
 * [自定义样式](https://starlight.astro.build/zh-cn/guides/css-and-tailwind/)
 * [编辑按钮设置](https://starlight.astro.build/zh-cn/guides/customization/#%E7%BC%96%E8%BE%91%E9%93%BE%E6%8E%A5)
 * [本地化](https://starlight.astro.build/guides/i18n/#use-a-root-locale)
 * [Starlight Image Zoom](https://starlight-image-zoom.vercel.app/getting-started/)
 
-## front-matter 可省略部分
+## 代码块优化
 
-https://starlight.astro.build/zh-cn/reference/frontmatter/#_top
+### 显示行号与样式定制
 
-在 astro blog 中 front-matter 中的 `description` 是不能被省略的，而在 astro starlight 是可以被省略的。
+Starlight 使用 Expressive Code 作为代码块渲染引擎，支持自定义行号、主题等功能。
 
+首先安装行号插件：
 
-```mdx title="\src\content\docs\index.mdx"
----
-title: Starlight Notes
-description: 基于 Astro Starlight 构建的个人笔记文档
-template: splash # Remove or comment out this line to display the site sidebar on this page.
-hero:
-  tagline: 基于 Astro Starlight 构建的个人笔记文档
-  image:
-    file: ../../assets/houston.webp
-  actions:
-    - text: 进入笔记
-      link: /astro-starlight/example/
-      icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
----
-```
-
-
-## 代码块
-
-### 代码显示行数
-
-参考：https://siaofei.github.io/note/demo-expressive-code-syntax
-
-
-```
+```bash
 pnpm add @expressive-code/plugin-line-numbers
 ```
 
-创建 ec.config.mjs
+创建 `ec.config.mjs` 配置文件，用于定制代码块样式：
 
 ```mjs title="./ec.config.mjs"
-import { 
-  latte, frappe, macchiato, mocha 
-} from '@catppuccin/vscode'
-
+import { latte, frappe, macchiato, mocha } from '@catppuccin/vscode'
 import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 import { defineEcConfig } from 'astro-expressive-code'
 
 export default defineEcConfig({
+  // 启用行号和折叠功能
   plugins: [
     pluginLineNumbers(),
     pluginCollapsibleSections()
   ],
 
-  // 同时指定亮色和暗色主题（顺序很重要：light, dark）
-  themes: [latte, mocha],           // 最常用：latte（亮） + mocha（暗）
-  // 或者你喜欢其他暗色口味：
+  // 主题配置：先亮色后暗色（顺序固定）
+  themes: [latte, mocha], // 推荐组合：latte(亮) + mocha(暗)
+  // 其他暗色主题可选：
   // themes: [latte, frappe],
   // themes: [latte, macchiato],
 
-  // 可选：如果你想让 Shiki 也用同样的主题（推荐）
-  themeCssSelector: (theme) => theme.type === 'dark' ? '[data-theme="dark"]' : '[data-theme="light"]',
+  // 确保主题与 Starlight 主题同步
+  themeCssSelector: (theme) => 
+    theme.type === 'dark' ? '[data-theme="dark"]' : '[data-theme="light"]',
 
+  // 样式微调
   styleOverrides: {
-    // 这里可以微调边框、代码文字大小等
     borderRadius: '0.5rem',
     codeFontSize: '0.95rem',
-    // ...
+    // 可添加更多自定义样式
   },
 })
 ```
 
-在 `showLineNumbers ins={3,5-6} ` 位置处可更改侧边栏文章板块、文章标识、文章路由等信息。
+## 侧边栏导航配置示例
 
+在 `astro.config.mjs` 中配置侧边栏结构：
 
-```js title=".\astro.config.mjs" showLineNumbers ins={3,5-6} 
+```js title="./astro.config.mjs" showLineNumbers ins={3,5-6}
 sidebar: [
-	{
-	 label: 'Astro-Strlight',
-	 items: [
-	    // Each item here is one entry in the navigation menu.
-	    { label: 'Astro-Strlight简要文档配置', slug: 'astro-starlight/example' },
-	  ],
+  {
+    label: 'Astro-Starlight',
+    items: [
+      // 每个条目对应导航菜单中的一项
+      { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/example' },
+    ],
   },
- {
-	 label: 'Reference',
-	 autogenerate: { directory: 'reference' },
- },
+  {
+    label: 'Reference',
+    autogenerate: { directory: 'reference' },
+  },
 ],
 ```
 
-## Starlight Frontmatter 配置选项
+## Frontmatter 配置详解
 
-Starlight 支持在 frontmatter 中配置多种选项来自定义页面行为和元数据。
+Starlight 支持在 Markdown/MDX 文件的 frontmatter 中配置丰富的页面选项，相比普通 Astro 博客，Starlight 的 `description` 字段是可选的。
 
-### 基础配置
+### 侧边栏设置（`sidebar`）
 
-#### `title`（必填）
-
-页面的标题，显示在页面顶部、浏览器标签和元数据中。
-
-```yaml
----
-title: "页面标题"
----
-```
-
-#### `description`
-
-页面的描述信息，用于 SEO 和社交媒体预览。
-
-```yaml
----
-description: "这是页面的描述信息"
----
-```
-
-#### `slug`
-
-页面的 URL 路径标识符。如果不设置，Starlight 会根据文件路径自动生成。
-
-```yaml
----
-slug: "my-page-slug"
----
-```
-
-### 侧边栏配置（`sidebar`）
-
-#### `sidebar.order`
-
-控制侧边栏中页面的显示顺序。数值越小，显示越靠前。
+控制页面在侧边栏中的显示方式：数值越小，页面在侧边栏中显示越靠前：
 
 ```yaml
 ---
 sidebar:
-  order: 1  # 数值越小越靠前
+  order: 1
 ---
 ```
 
-#### `sidebar.badge`
-
-在侧边栏中显示徽章。
+为侧边栏条目添加徽章：
 
 ```yaml
 ---
 sidebar:
   badge:
     text: "Demo"      # 徽章文本
-    variant: "note"   # 徽章颜色
+    variant: "note"   # 徽章样式
 ---
 ```
 
-**Badge 颜色选项（`variant`）：**
+**徽章样式选项（`variant`）：**
 * `tip` - 紫色
 * `note` - 蓝色
 * `danger` - 红色
@@ -174,23 +111,9 @@ sidebar:
 * `success` - 绿色
 * `default` - 主题强调色
 
-### 页面模板（`template`）
-
-控制页面的布局模板。
-
-```yaml
----
-template: splash  # 使用启动页模板（隐藏侧边栏）
----
-```
-
-可选值：
-* `splash` - 启动页模板（隐藏侧边栏）
-* 不设置或注释掉 - 使用默认模板（显示侧边栏）
-
 ### 英雄区块（`hero`）
 
-用于首页或重要页面的英雄区块配置。
+用于首页或重要页面的引人注目的头部区域：
 
 ```yaml
 ---
@@ -210,65 +133,51 @@ hero:
 ---
 ```
 
-**Actions 配置：**
-* `text` - 按钮文本
-* `link` - 链接地址
-* `icon` - 图标名称（如 `right-arrow`、`external` 等）
-* `variant` - 按钮样式（`primary`、`secondary`、`minimal`）
+**按钮配置参数：**
+* `text` - 按钮显示文本
+* `link` - 目标链接地址
+* `icon` - 图标名称（如 `right-arrow`、`external`）
+* `variant` - 按钮样式（`primary`/`secondary`/`minimal`）
 
-### 目录配置（`tableOfContents`）
+### 目录控制（`tableOfContents`）
 
-控制页面右侧目录的显示。
+自定义页面右侧目录的显示方式：
 
 ```yaml
 ---
 # 禁用目录
-tableOfContents: false
+# tableOfContents: false
 
-# 或限制标题级别
+# 限制目录标题级别
+# 默认值：min=2 (H2), max=3 (H3)
 tableOfContents:
-  minHeadingLevel: 2  # 最小标题级别（H2）
-  maxHeadingLevel: 4  # 最大标题级别（H4）
----
-```
-
-### 编辑链接（`editUrl`）
-
-覆盖全局的"编辑页面"链接。
-
-```yaml
----
-# 禁用编辑链接
-editUrl: false
-
-# 或设置自定义编辑 URL
-editUrl: "https://github.com/user/repo/edit/main/content/docs/page.md"
+  minHeadingLevel: 2  # 最小显示 H2
+  maxHeadingLevel: 4  # 最大显示 H4
 ---
 ```
 
 ### 自定义 Head 标签（`head`）
 
-向页面的 `<head>` 部分添加额外的标签。
+向页面 `<head>` 添加自定义标签：
 
 ```yaml
 ---
+# 自定义页面元数据
 head:
   - tag: meta
     attrs:
       name: keywords
-      content: "Astro, Starlight, 文档"
-  - tag: link
-    attrs:
-      rel: "canonical"
-      href: "https://example.com/page"
+      content: "Starlight, MDX, 组件"
 ---
 ```
 
 ### 完整配置示例
 
+以下是一个包含多种配置的完整示例：
+
 ```yaml
 ---
-title: "基于Starlight的写作扩展"
+title: "基于 Starlight 的写作扩展"
 description: "Starlight 组件使用指南和配置说明"
 slug: writing-standards/starlight-writing-extensions
 sidebar:
@@ -288,421 +197,148 @@ head:
 ---
 ```
 
-
-## Starlight 自定义 CSS 选择器策略
-
-在 Starlight 中自定义样式时，**不要使用硬编码的哈希类名**（如 `.astro-xouerbd5`），因为这些哈希值在每次构建时都会变化，导致样式在 GitHub Pages 等生产环境中失效。
-
-### 问题分析
-
-#### 为什么哈希类名会变化？
-
-Astro 使用作用域 CSS（Scoped CSS）来避免样式冲突。每次构建时，Astro 会：
-1. 为每个组件生成唯一的哈希类名
-2. 根据文件内容计算哈希值
-3. 即使内容没变，构建环境不同也可能产生不同的哈希值
-
-**示例（不推荐）：**
-```css
-/* ❌ 错误：哈希值会变化 */
-.astro-xouerbd5 {
-    font-size: 16px;
-}
-```
-
-### 正确的选择器策略
-
-#### 1. 使用 Starlight 的标准类名（推荐）
-
-Starlight 提供了稳定的类名前缀，如 `.sl-` 开头的类名：
-
-```css
-/* ✅ 正确：使用 Starlight 标准类名 */
-.sl-sidebar a {
-    font-size: 16px;
-}
-
-.sl-badge {
-    font-size: 10px;
-}
-
-.sl-header {
-    display: flex;
-}
-```
-
-#### 2. 使用 ID 选择器（最稳定）
-
-ID 选择器不会变化，是最稳定的选择方式：
-
-```css
-/* ✅ 正确：ID 选择器 */
-#starlight__on-this-page {
-    font-size: 18px;
-}
-```
-
-#### 3. 使用数据属性选择器
-
-许多 Starlight 组件都有数据属性：
-
-```css
-/* ✅ 正确：使用数据属性 */
-button[data-open-modal] {
-    min-width: 300px;
-}
-
-nav[aria-label="Main"] a {
-    font-size: 16px;
-}
-```
-
-#### 4. 使用语义化 HTML 标签 + 容器
-
-结合 HTML 标签和容器类名：
-
-```css
-/* ✅ 正确：语义化选择器 */
-.sl-content h1 {
-    font-size: 24px;
-}
-
-.sl-sidebar nav a.large {
-    font-size: 18px;
-}
-```
-
-#### 5. 使用属性选择器组合
-
-结合多个属性来精确选择：
-
-```css
-/* ✅ 正确：属性组合 */
-header[data-theme] {
-    display: flex;
-}
-
-@media (min-width: 50rem) {
-    .sl-header button[data-open-modal] {
-        min-width: 300px;
-    }
-}
-```
-
-### 如何查找正确的选择器
-
-#### 方法 1：浏览器开发者工具
-
-1. 打开浏览器开发者工具（F12）
-2. 使用元素选择器选择目标元素
-3. 查看元素的类名、ID 和数据属性
-4. 优先选择：
-   - 以 `.sl-` 开头的类名
-   - `id` 属性
-   - `data-*` 属性
-   - `aria-*` 属性
-
-#### 方法 2：查看 Starlight 源码
-
-查看 Starlight 的组件源码，了解稳定的类名结构。
-
-#### 方法 3：使用通配符选择器（谨慎使用）
-
-如果必须使用哈希类名，可以使用属性选择器：
-
-```css
-/* ⚠️ 谨慎使用：匹配所有以 astro- 开头的类 */
-[class*="astro-"] {
-    /* 样式 */
-}
-```
-
-### GitHub Pages 部署注意事项
-
-#### 1. 确保 `.nojekyll` 文件存在
-
-在项目根目录创建 `.nojekyll` 文件，禁用 Jekyll 处理：
-
-```bash
-touch .nojekyll
-```
-
-#### 2. 检查 base 路径
-
-确保 `astro.config.mjs` 中的 `base` 配置正确：
-
-```javascript
-export default defineConfig({
-  site: 'https://hoochanlon.github.io',
-  base: 'docs',  // 如果仓库名不是 username.github.io
-  // ...
-})
-```
-
-#### 3. CSS 文件路径
-
-确保 `customCss` 路径正确：
-
-```javascript
-starlight({
-  customCss: ['./src/styles/custom.css'],  // 相对路径
-})
-```
-
-#### 4. 构建后检查
-
-构建后检查 `dist/` 目录，确认 CSS 文件已正确生成和引用。
-
-### 完整示例
-
-```css
-/* ============================================
-   推荐的选择器策略示例
-   ============================================ */
-
-/* 1. 使用 Starlight 标准类名 */
-.sl-sidebar a {
-    font-size: 16px;
-}
-
-.sl-badge {
-    font-size: 10px;
-}
-
-/* 2. 使用 ID 选择器 */
-#starlight__on-this-page {
-    font-size: 18px;
-}
-
-/* 3. 使用数据属性 */
-button[data-open-modal] {
-    min-width: 300px;
-}
-
-/* 4. 使用语义化选择器 */
-.sl-content h1 {
-    font-size: 24px;
-}
-
-/* 5. 组合选择器提高优先级 */
-.sl-sidebar nav a.large {
-    font-size: 18px !important;
-}
-```
-
-### 常见 Starlight 类名参考
-
-- `.sl-sidebar` - 侧边栏容器
-- `.sl-content` - 主内容区域
-- `.sl-header` - 头部
-- `.sl-badge` - 徽章
-- `.sl-page-title` - 页面标题
-- `#starlight__on-this-page` - 目录容器
-
-### 调试技巧
-
-1. **本地构建测试**：运行 `npm run build` 后检查 `dist/` 目录
-2. **检查控制台**：查看是否有 CSS 加载错误
-3. **网络面板**：确认 CSS 文件是否正确加载
-4. **元素检查**：使用开发者工具查看实际渲染的类名
-
 ## 静态图片资源管理
 
-在 Astro Starlight 中，有多种方式管理静态图片资源。
+在 Astro Starlight 中管理图片资源有两种主要方式，各有优缺点。
 
 ### 1. 使用 `src/assets/` 目录（推荐）
 
-将图片放在 `src/assets/` 目录中，使用相对路径引用。
+将图片放在 `src/assets/` 目录下，使用相对路径引用，可享受 Astro 的自动优化。
 
-**目录结构：**
-```
-src/
-  assets/
-    avatar.png
-    logo.svg
-    images/
-      screenshot.png
-  content/
-    docs/
-      page.mdx
-```
+**引用方式：**
 
-**在 Frontmatter 中引用（Hero 图片）：**
-
+在 Hero 区块中引用（frontmatter）：
 ```yaml
 ---
 hero:
   image:
-    file: ../../assets/avatar.png  # 相对路径
+    file: ../../assets/avatar.png
 ---
 ```
 
-**在 Markdown/MDX 中引用：**
 
-```mdx
-![图片描述](../../assets/avatar.png)
-```
+### 2. 使用 `public/` 目录（简单直接）
 
-**使用 Astro 的 Image 组件（需要导入）：**
-
-```mdx
----
-import { Image } from 'astro:assets'
-import avatar from '../../assets/avatar.png'
----
-
-<Image src={avatar} alt="头像" />
-```
-
-### 2. 使用 `public/` 目录（根路径引用）
-
-将图片放在 `public/` 目录中，可以直接使用根路径引用。
+将图片放在 `public/` 目录下，使用根路径引用，适合大量静态资源。
 
 **目录结构：**
 ```
 public/
-  images/
-    logo.png
-    screenshot.jpg
-  favicon.svg
+├── images/
+│   ├── logo.png
+│   └── screenshot.jpg
+└── favicon.svg
 ```
 
-**引用方式（注意 base 路径）：**
+**引用方式：**
 
-如果你的 `astro.config.mjs` 中设置了 `base: 'docs'`：
+需要注意 `astro.config.mjs` 中的 `base` 配置：
 
+如果设置了 `base: 'docs'`：
 ```mdx
-<!-- 在 Markdown/MDX 中 -->
 ![图片描述](/docs/images/logo.png)
-
-<!-- 或使用 HTML -->
-<img src="/docs/images/logo.png" alt="Logo" />
 ```
 
 如果没有设置 `base`：
-
 ```mdx
 ![图片描述](/images/logo.png)
 ```
 
-**在 Frontmatter 中（Hero 图片）：**
-
+在 Hero 区块中引用（frontmatter）：
 ```yaml
 ---
 hero:
   image:
-    file: /images/logo.png  # 从 public 目录的根路径
+    file: /images/logo.png
 ---
 ```
 
-### 3. 外部图片（CDN）
-
-使用外部 CDN 链接，无需本地存储。
-
-```mdx
-![图片描述](https://cdn.example.com/image.png)
-```
-
-### 4. 图片路径配置说明
-
-#### 相对路径 vs 绝对路径
+### 3. 相对路径 vs 绝对路径
 
 **相对路径**（从 `src/assets/` 引用）：
-- ✅ 会被 Astro 优化处理（压缩、格式转换等）
+- ✅ Astro 自动优化（压缩、格式转换）
 - ✅ 支持 TypeScript 类型检查
-- ✅ 构建时检查图片是否存在
-- ❌ 需要计算相对路径
+- ✅ 构建时验证文件存在性
+- ❌ 需要计算正确的相对路径
 
 **绝对路径**（从 `public/` 引用）：
 - ✅ 路径简单直观
 - ✅ 适合大量静态资源
-- ❌ 不会被优化处理
-- ❌ 需要手动处理 base 路径
+- ❌ 不支持自动优化
+- ❌ 需要手动处理 `base` 路径
 
-#### Base 路径处理
 
-如果你的项目配置了 `base: 'docs'`（在 `astro.config.mjs` 中）：
-
-```javascript
-export default defineConfig({
-  base: 'docs',  // 所有路径都需要加上 /docs 前缀
-  // ...
-})
 ```
-
-那么所有从 `public/` 引用的图片都需要加上 `/docs` 前缀：
-
-```mdx
-<!-- ✅ 正确 -->
-![图片](/docs/images/logo.png)
-
-<!-- ❌ 错误（会找不到图片） -->
-![图片](/images/logo.png)
-```
-
-### 5. 完整示例
-
-#### 示例 1：使用 src/assets（推荐用于少量图片）
-
-```mdx
----
-title: "我的页面"
----
-
-<!-- 方式 1：Markdown 语法 -->
-![头像](../../assets/avatar.png)
-
-<!-- 方式 2：Astro Image 组件（需要导入） -->
----
-import { Image } from 'astro:assets'
-import avatar from '../../assets/avatar.png'
----
-
-<Image src={avatar} alt="头像" width={200} height={200} />
-```
-
-#### 示例 2：使用 public 目录（适合大量静态资源）
-
-```mdx
----
-title: "我的页面"
----
-
-<!-- 如果 base: 'docs' -->
+<!-- 如果配置了 base: 'docs' -->
 ![Logo](/docs/images/logo.png)
 
-<!-- 如果没有 base -->
+<!-- 如果没有配置 base -->
 ![Logo](/images/logo.png)
 ```
 
-#### 示例 3：Hero 图片配置
+**图片管理建议**
+
+1. 少量图片：优先使用 `src/assets/`，享受 Astro 优化
+2. 大量静态资源：使用 `public/`，简化路径管理
+3. Hero 图片：优先使用 `src/assets/`，确保优化显示
+4. base 路径：配置 `base` 后，所有 `public/` 资源引用需添加前缀
+
+## Slug/url 管理
+
+除了内容层级的命名约定，良好的文档实践还包括对URL标识（slug）的规范使用。Slug是文档在网络环境中的唯一标识，直接影响文档的可访问性和SEO表现。
+
+### 1. 使用有意义的 slug
+
+Slug应准确反映文档内容，避免使用无意义的字符或临时名称：
 
 ```yaml
----
-title: "首页"
-hero:
-  image:
-    # 从 src/assets 引用（相对路径）
-    file: ../../assets/avatar.png
-    
-    # 或从 public 引用（绝对路径，注意 base）
-    # file: /images/hero.png
----
+# ✅ 推荐
+slug: getting-started  # 清晰表达文档用途
+slug: api-reference    # 明确指示文档类型
+slug: advanced-topics  # 概括内容范围
+
+# ❌ 不推荐
+slug: page1           # 无意义的编号
+slug: doc-2024-01-01  # 仅包含日期，缺乏内容指示
+slug: temp            # 临时名称，不适合长期使用
 ```
 
-### 6. 最佳实践
+### 2. 保持 slug 简洁
 
-1. **少量图片**：使用 `src/assets/`，享受自动优化
-2. **大量静态资源**：使用 `public/`，路径更简单
-3. **外部图片**：使用 CDN，减少构建体积
-4. **Hero 图片**：优先使用 `src/assets/`，确保优化
-5. **注意 base 路径**：如果配置了 `base`，所有 `public/` 路径都需要加上 base 前缀
+简洁的slug便于记忆和传播，避免使用过长的描述性短语：
 
-### 7. 图片优化建议
+```yaml
+# ✅ 推荐
+slug: quick-start  # 简洁明了
 
-- 使用 WebP 格式以获得更好的压缩比
-- 大图片使用 CDN 或图片优化服务
-- 使用 Astro 的 Image 组件自动优化本地图片
-- 为所有图片添加有意义的 `alt` 文本
+# ❌ 不推荐
+slug: how-to-get-started-with-our-amazing-product-in-5-minutes  # 过于冗长
+```
 
+### 3. 使用一致的命名风格
 
+选择并坚持一种命名风格，确保整个文档系统的一致性：
+
+```yaml
+# ✅ 推荐：使用连字符（应用广泛，兼容性好）
+slug: api-reference
+slug: user-guide
+
+# 或者使用下划线（保持内部一致即可）
+slug: api_reference
+slug: user_guide
+```
+
+### 4. 在配置文件中优先使用 slug
+
+在文档系统的配置文件（如 `meta.json`）中，优先使用slug引用页面，提高配置的可读性和可维护性：
+
+```json
+{
+  "pages": [
+    "index",
+    "getting-started",  // ✅ 使用有意义的slug
+    "api-reference"     // ✅ 使用有意义的slug
+  ]
+}
+```

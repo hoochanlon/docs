@@ -2,10 +2,6 @@
 title: Fumadocs 简要配置
 ---
 
-## 前言
-
-在 docusaurus 不能完全支持 shiki 之前，我是不会用它的。版面布局跟 vuepress 很像。而 fumadocs 又和上古的 gitbook 挺像，所以还是决定用它。
-
 ## 踩坑！不能插入图片的解决办法
 
 
@@ -35,16 +31,12 @@ export default withMDX(config);
 
 ![](https://images.sonurai.com/SaltDesert.jpg)
 
+官方给的教程过于抽象，很多坑都要踩了才懂。而有一个现成调试好的例子就显得尤为必要了。sh2aliyev/notes：https://github.com/sh2aliyev/notes
 
-## React Hydration Error（水合不匹配错误）
+
+## 水合错误
 
 浏览器广告屏蔽/翻译/暗黑模式等扩展在 React hydrate 之前偷偷修改了服务端渲染的 HTML，导致客户端看到的 DOM 和 React 预期的不一致，触发水合错误。
-
-## 找到不错的例子，减少折腾
-
-官方给的教程过于抽象，很多坑都要踩了才懂。而有一个现成调试好的例子就显得尤为必要了。
-
-sh2aliyev/notes：https://github.com/sh2aliyev/notes
 
 
 ## 站点标题
@@ -70,6 +62,116 @@ export function baseOptions(): BaseLayoutProps {
 ## 首页界面相关
 
 https://github.com/fuma-nama/fumadocs/issues/2720
+
+
+## 笔记本样式
+
+
+安装 `npx @fumadocs/cli@latest customise`
+
+
+在 \app\docs\layout.tsx 写入，样式二选一
+
+1
+
+```tsx title="\app\docs\layout.tsx" del={2} ins={3}
+import { source } from '@/lib/source';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
+import { baseOptions } from '@/lib/layout.shared';
+
+export default function Layout({ children }: LayoutProps<'/docs'>) {
+  return (
+    <DocsLayout tree={source.pageTree} {...baseOptions()}>
+      {children}
+    </DocsLayout>
+  );
+}
+```
+
+2
+
+
+```tsx title="\app\docs\layout.tsx"
+import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
+import { baseOptions } from '@/lib/layout.shared';
+import { source } from '@/lib/source';
+import type { ReactNode } from 'react';
+
+export default function Layout({ children }: { children: ReactNode }) {
+  const { nav, ...base } = baseOptions();
+
+  return (
+    <DocsLayout
+      {...base}
+      nav={{ ...nav, mode: 'top' }}
+      tree={source.pageTree}
+    >
+      {children}
+    </DocsLayout>
+  );
+}
+```
+
+
+
+在 \app\docs\[[...slug]]\page.tsx 修改
+
+
+```tsx title="\app\docs\[[...slug]]\page.tsx" {7}
+import { getPageImage, source } from '@/lib/source';
+import {
+  DocsBody,
+  DocsDescription,
+  DocsPage,
+  DocsTitle,
+} from 'fumadocs-ui/layouts/notebook/page';
+```
+
+
+
+## 布局链接
+
+创建 github 图标链接
+
+https://fumadocs-zh.zdoc.app/docs/ui/navigation/links
+
+
+```tsx title="lib\layout.shared.tsx"
+import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+
+export function baseOptions(): BaseLayoutProps {
+  return {
+    githubUrl: 'https://github.com/hoochanlon',
+  };
+}
+```
+
+
+## 主题设置
+
+
+```css title="\app\global.css"
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/ocean.css';
+@import 'fumadocs-ui/css/preset.css';
+```
+
+npm 安装
+
+`npm list fumadocs-ui tailwindcss`
+
+测试，检查 ocean.css 是否存在 `Test-Path "node_modules\fumadocs-ui\css\ocean.css"`
+
+清除缓存 `if (Test-Path ".next") { Remove-Item -Recurse -Force ".next" }`
+
+重新运行 `npm run dev`
+
+
+夜间模式才能看出来
+
+![](https://cdn.jsdelivr.net/gh/hoochanlon/picx-images-hosting@master/uploads/2025/PixPin_2025-12-05_11-01-40.webp)
+
 
 ## 数学公式支持
 
@@ -268,12 +370,12 @@ function calculateTotal(items) {
 ### Prism/Rehype 风格
 
 
-* title="filename.js" - 文件标题
-* showLineNumbers - 显示行号
-* ins={1,3-5} - 高亮行（插入/新增）
-* del={2,4} - 删除行标记
-* mark={2,5-7} - 标记高亮行
-* collapse={12-80} - 折叠
+* `title="filename.js"` - 文件标题
+* `showLineNumbers` - 显示行号
+* `ins={1,3-5}` - 高亮行（插入/新增）
+* `del={2,4}` - 删除行标记
+* `mark={2,5-7}` - 标记高亮行
+* `collapse={12-80}` - 折叠
 
 
 '```js title="filename.js" showLineNumbers'
@@ -399,111 +501,7 @@ function calculateTotal(items) {
 }
 ```
 
+## 其他配置
 
-## 笔记本样式
-
-
-安装 `npx @fumadocs/cli@latest customise`
-
-
-在 \app\docs\layout.tsx 写入，样式二选一
-
-1
-
-```tsx title="\app\docs\layout.tsx" del={2} ins={3}
-import { source } from '@/lib/source';
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
-import { baseOptions } from '@/lib/layout.shared';
-
-export default function Layout({ children }: LayoutProps<'/docs'>) {
-  return (
-    <DocsLayout tree={source.pageTree} {...baseOptions()}>
-      {children}
-    </DocsLayout>
-  );
-}
-```
-
-2
-
-
-```tsx title="\app\docs\layout.tsx"
-import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
-import { baseOptions } from '@/lib/layout.shared';
-import { source } from '@/lib/source';
-import type { ReactNode } from 'react';
-
-export default function Layout({ children }: { children: ReactNode }) {
-  const { nav, ...base } = baseOptions();
-
-  return (
-    <DocsLayout
-      {...base}
-      nav={{ ...nav, mode: 'top' }}
-      tree={source.pageTree}
-    >
-      {children}
-    </DocsLayout>
-  );
-}
-```
-
-
-
-在 \app\docs\[[...slug]]\page.tsx 修改
-
-
-```tsx title="\app\docs\[[...slug]]\page.tsx" {7}
-import { getPageImage, source } from '@/lib/source';
-import {
-  DocsBody,
-  DocsDescription,
-  DocsPage,
-  DocsTitle,
-} from 'fumadocs-ui/layouts/notebook/page';
-```
-
-
-
-## 布局链接
-
-创建 github 图标链接
-
-https://fumadocs-zh.zdoc.app/docs/ui/navigation/links
-
-
-```tsx title="lib\layout.shared.tsx"
-import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-
-export function baseOptions(): BaseLayoutProps {
-  return {
-    githubUrl: 'https://github.com/hoochanlon',
-  };
-}
-```
-
-
-## 主题设置
-
-
-```css title="\app\global.css"
-@import 'tailwindcss';
-@import 'fumadocs-ui/css/ocean.css';
-@import 'fumadocs-ui/css/preset.css';
-```
-
-npm 安装
-
-`npm list fumadocs-ui tailwindcss`
-
-测试，检查 ocean.css 是否存在 `Test-Path "node_modules\fumadocs-ui\css\ocean.css"`
-
-清除缓存 `if (Test-Path ".next") { Remove-Item -Recurse -Force ".next" }`
-
-重新运行 `npm run dev`
-
-
-夜间模式才能看出来
-
-![](https://cdn.jsdelivr.net/gh/hoochanlon/picx-images-hosting@master/uploads/2025/PixPin_2025-12-05_11-01-40.webp)
+* https://github.com/fuma-nama/fumadocs/discussions/2717
+* https://github.com/fuma-nama/fumadocs/issues/2720

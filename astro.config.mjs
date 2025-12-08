@@ -62,7 +62,7 @@ export default defineConfig({
             {
                 label: 'Astro-Starlight',
                 items: [
-                    { label: 'Astro-Starlight 相关配置', slug: 'astro-starlight/astro-starlight-example' },
+                    { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
                     { label: '基于Starlight的写作扩展', slug: 'astro-starlight/starlight-writing-extensions'},
                     { label: 'Astro-Starlight 写作脚本', slug: 'astro-starlight/astro-starlight-scripts' },
                 ],
@@ -78,8 +78,6 @@ export default defineConfig({
                 label: 'fumadocs',
                 items: [
                     { label: 'fumadocs 简要配置', slug: 'fumadocs/fumadocs-example' },
-                    { label: 'fumadocs 目录路由配置', slug: 'fumadocs/fumadocs-route' },
-                    { label: 'fumadocs 本地搜索', slug: 'fumadocs/fumadocs-search' },
                 ],
             },
         ],
