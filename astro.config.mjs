@@ -60,6 +60,12 @@ export default defineConfig({
                 ],
             },
             {
+                label: '常用的命令备忘',
+                items: [
+                    { label: 'git 常用命令', slug: 'cmd/git-cmd' },                    
+                ],
+            },
+            {
                 label: 'Astro-Starlight',
                 items: [
                     { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },

@@ -1,0 +1,49 @@
+---
+title: git 常用命令
+---
+
+## push
+
+```shell
+git init
+git remote -v
+git remote remove origin
+git remote add origin https://github.com/hoochanlon/aitii-tekisuto.git
+git checkout -b main
+git add .
+git commit -m "123"
+git push -f origin main
+```
+
+## reset
+
+
+```shell
+# 1. 先查看历史，确定要回退的版本
+git log --oneline
+
+# 2. 如果需要保留当前修改，先暂存
+git stash
+git stash list
+
+# 3. 进行回退操作
+git reset --hard <target_commit>
+
+# 4. 如果需要恢复之前暂存的修改
+git stash pop
+```
+
+
+```
+# 回到上一个提交
+git reset --hard HEAD~1
+# 或
+git reset --hard HEAD^
+```
+
+## pull
+
+
+```shell
+git pull origin main
+```
