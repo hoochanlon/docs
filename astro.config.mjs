@@ -24,6 +24,16 @@ export default defineConfig({
       ],
     ],
   },
+  vite: {
+    resolve: {
+      alias: {
+        '@components': new URL('./src/components', import.meta.url).pathname,
+      },
+    },
+    ssr: {
+      noExternal: ['@astrojs/starlight'],
+    },
+  },
     integrations: [expressiveCode(), starlight({
         plugins: [
           starlightImageZoom(),
@@ -66,10 +76,16 @@ export default defineConfig({
                 ],
             },
             {
+                label: '便利工具收集',
+                items: [
+                    { label: '像只仓鼠囤积我的数字工具', slug: 'tools/hamster' },                    
+                ],
+            },
+            {
                 label: 'Astro-Starlight',
                 items: [
                     { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
-                    { label: '基于Starlight的写作扩展', slug: 'astro-starlight/starlight-writing-extensions'},
+                    { label: 'Astro-Starlight 扩展', slug: 'astro-starlight/starlight-writing-extensions'},
                     { label: 'Astro-Starlight 写作脚本', slug: 'astro-starlight/astro-starlight-scripts' },
                 ],
             },

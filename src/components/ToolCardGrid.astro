@@ -1,0 +1,27 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class={`tool-card-grid ${className || ''}`}>
+  <slot />
+</div>
+
+<style>
+  .tool-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  @media (max-width: 768px) {
+    .tool-card-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+

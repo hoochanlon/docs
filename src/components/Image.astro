@@ -1,0 +1,31 @@
+---
+interface Props {
+  src: string;
+  alt?: string;
+  width?: number | string;
+  height?: number | string;
+  class?: string;
+}
+
+const { src, alt = '', width, height, class: className } = Astro.props;
+
+// 如果路径以 ./ 开头，自动添加 /docs/ 前缀
+// 如果已经是绝对路径或完整 URL，则保持不变
+let imageSrc = src;
+if (src.startsWith('./')) {
+  // 移除 ./ 前缀，添加 /docs/ 前缀
+  imageSrc = `/docs/${src.slice(2)}`;
+} else if (!src.startsWith('/') && !src.startsWith('http')) {
+  // 如果不是以 / 或 http 开头，也添加 /docs/ 前缀
+  imageSrc = `/docs/${src}`;
+}
+---
+
+<img 
+  src={imageSrc} 
+  alt={alt}
+  width={width}
+  height={height}
+  class={className}
+/>
+
