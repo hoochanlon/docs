@@ -37,7 +37,9 @@ export default defineConfig({
     integrations: [expressiveCode(), starlight({
         plugins: [
           starlightImageZoom(),
-          starlightThemeFlexoki(),
+          // starlightThemeFlexoki(),
+          starlightThemeRapide(),
+          // starlightThemeGalaxy(),
         ],
         title: 'My Docs',
         customCss: [
