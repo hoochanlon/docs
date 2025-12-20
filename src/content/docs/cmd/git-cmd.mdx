@@ -35,6 +35,13 @@ git stash pop
 
 
 ```
+# 撤销到合并前的提交，保留工作区更改
+# 不小心 merge 了，撤回。
+git reset --merge ORIG_HEAD
+```
+
+
+```
 # 回到上一个提交
 git reset --hard HEAD~1
 # 或
