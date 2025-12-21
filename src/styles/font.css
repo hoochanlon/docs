@@ -1,0 +1,183 @@
+@import url('https://cdn.jsdelivr.net/gh/hoochanlon/fonts@main/public/JetBrainsMono/result.css');
+@import url('https://cdn.jsdelivr.net/gh/hoochanlon/fonts@main/public/OPPOSans4/result.css');
+
+/* Starlight 会在 body 上设置字体，
+   通配符 * 的优先级比 body 低，所以之前的设置会被覆盖。
+   这里直接覆盖常用文本容器的 font-family。 */
+html,
+body,
+main,
+.sl-markdown-content,
+#starlight__sidebar,
+.site-title,
+button,
+input,
+span,
+textarea {
+    font-family: "OPPO Sans 4.0", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+
+/* 中文标题字体大小 */
+h1 {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 1.2em 0 0.8em 0;
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 1em 0 0.6em 0;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0.9em 0 0.5em 0;
+}
+
+h4 {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0.8em 0 0.4em 0;
+}
+
+h5 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0.7em 0 0.3em 0;
+}
+
+h6 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0.6em 0 0.3em 0;
+}
+
+
+p {
+    font-size: 16px;
+    line-height: 1.8;
+    margin: 0.8em 0;
+    color: inherit;
+}
+
+
+a {
+    font-size: 16px;
+    line-height: 1.8;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+span {
+    font-size: 16px;
+    line-height: inherit;
+}
+
+/* div 容器字体大小（继承或默认） */
+div {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* ============================================
+   头部和搜索框样式 - 使用稳定的选择器
+   ============================================ */
+
+/* 搜索按钮居中定位 */
+.header > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+/* 搜索按钮变长 - 使用数据属性选择器（稳定） */
+button[data-open-modal] {
+    min-width: 400px !important;
+    max-width: 500px !important;
+    width: auto;
+}
+
+
+/* ============================================
+   侧边栏样式 - 使用稳定的选择器策略
+   ============================================ */
+
+
+/* 侧边栏一级导航字体大小 */
+#starlight__sidebar .large {
+    font-size: 19px;
+}
+/* 控制所有侧边栏文字 */
+#starlight__sidebar span {
+    font-size: 16px;
+}
+  
+  
+
+
+/* ============================================
+   目录样式 
+   ============================================ */
+
+/* 目录标题 */
+#starlight__on-this-page {
+    font-size: 18px;
+}
+
+/* 通过父级的稳定类名来控制 */
+starlight-toc nav span {
+  font-size: 15px; /* 设置目录整体字体大小 */
+}
+
+/* ============================================
+   搜索按钮样式 - 使用数据属性选择器
+   ============================================ */
+
+/* 搜索按钮增加宽度 - 响应式设置 */
+@media (min-width: 50rem) {
+    button[data-open-modal],
+    .sl-header button[data-open-modal],
+    .header button[data-open-modal] {
+        min-width: 400px !important;
+        max-width: 500px !important;
+        width: auto;
+    }
+}
+
+/* ============================================
+   文档标题样式
+   ============================================ */
+/* 1. 结合 site-title 类和 translate 属性 */
+.site-title span[translate="no"] {
+    font-size: 20px !important;
+  }
+  
+/* 标题锚点图标大小与间距 */
+.sl-markdown-content .sl-heading-wrapper {
+    --sl-anchor-icon-size: 1.35em;  /* 默认约 0.83em，调大一点 */
+}
+
+
+/* ============================================
+   Badge 样式 - 只针对侧边栏中的 Badge
+   ============================================ */
+
+/* 只选择侧边栏内的 Badge - 使用 ID 选择器（最稳定） */
+#starlight__sidebar .sl-badge {
+    font-size: 9px !important;
+}
