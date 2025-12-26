@@ -4,14 +4,14 @@
 
 基于 [Astro Starlight](https://starlight.astro.build/zh-cn/) 构建的个人知识库文档
 
-![](https://cdn.statically.io/gh/hoochanlon/picx-images-hosting/refs/heads/master/uploads/2025/PixPin_2025-12-08_16-08-39.jpg)
+![](https://cdn.statically.io/gh/hoochanlon/picx-images-hosting/refs/heads/master/imgs/uploads/2025/PixPin_2025-12-08_16-08-39.jpg)
 
 
 ## 文档生成工具对比
 
 AI生成对比图
 
-![](https://cdn.jsdelivr.net/gh/hoochanlon/picx-images-hosting@master/uploads/2025/PixPin_2025-12-05_14-31-08.webp)
+![](https://cdn.jsdelivr.net/gh/hoochanlon/picx-images-hosting@master/imgs/uploads/2025/PixPin_2025-12-05_14-31-08.webp)
 
 实测下来，个人看法:
 
