@@ -1,0 +1,108 @@
+---
+title: 我的项目应用到的相关技术原理图 （一）
+---
+
+:::tip
+Mermaid 打开方式：https://mermaid.live
+:::
+
+## CF-Proxy-B2
+
+https://github.com/hoochanlon/CF-Proxy-B2
+
+由于 Cloudflare 和 Backblaze 都属于 Bandwidth Alliance（带宽联盟），因此从 Cloudflare 回源到Backblaze B2（即“入口流量”）也是完全免费的。
+
+简单来说，这套方案的免费流量模式是：
+
+* 出口流量免费：Backblaze B2 → Cloudflare CDN
+* 入口流量免费：Cloudflare CDN → Backblaze B2
+
+
+```mermaid
+flowchart TD
+    User[“用户访问<br>img.yourdomain.com/xxx.jpg”]
+
+    subgraph Cloudflare [Cloudflare CDN]
+        direction LR
+        CF_Cache[边缘节点缓存]
+    end
+
+    subgraph Backblaze[Backblaze B2]
+        B2_Storage[“存储桶<br>（源站）”]
+    end
+
+    User --> Cloudflare
+
+    CF_Cache -- “❌ 缓存未命中<br>入口请求：免费（带宽联盟）” --> B2_Storage
+    B2_Storage -- “✅ 回源响应<br>出口流量：免费（带宽联盟）” --> CF_Cache
+
+    CF_Cache -- “✅ 缓存命中<br>无流量费用” --> User
+```
+
+## keep-alive
+
+https://github.com/hoochanlon/keep-alive
+
+zeabur 免费：1 CPU，2G 内存，每月5美元重置，硬盘 $0.2/GB 月，网络输出费用 $0.1/GB
+
+* 详情见：https://zeabur.com/docs/zh-CN/billing/pricing 。
+* 或用 B2 S3 提供存储数据支撑 [tenten - 比較 Cloudflare R2 與 AWS S3，Blaze B2](https://university.tenten.co/t/cloudflare-r2-aws-s3-blaze-b2/1641)
+
+采用 [hu3rror/memos-litestream](https://github.com/hu3rror/memos-litestream) 该方案，并结合 B2，既能满足可用存储充足，又能将个人账号基础数据备份，以及使用 [hoochanlon/CF-Proxy-B2](https://github.com/hoochanlon/CF-Proxy-B2) 达到免流目的。
+
+Litestream 备份流程，解决了 serverless 备份限制的痛点
+
+```mermaid
+flowchart TD
+    A[应用程序写入数据] --> B[SQLite 数据库]
+    
+    subgraph SQLite 进程
+        B -- 1. 事务写入 --> C[WAL 文件<br/>顺序记录所有变更]
+        C -- 2. 定期合并 --> D[主数据库文件 .db]
+    end
+    
+    subgraph Litestream 进程
+        E[Litestream<br/>实时监控 WAL] -- 3. 捕获新帧 --> C
+        E -- 4. 流式复制 --> F[上传队列]
+        F -- 5. 异步传输 --> G[远程副本<br/>对象存储 S3/GCS 等]
+    end
+    
+    D -- 6. 生成快照 --> G
+    
+    G -- 7. 基于快照与 WAL 序列 --> H[完成的时间点恢复]
+```
+
+## picx-images-hosting
+
+https://github.com/hoochanlon/picx-images-hosting
+
+### GitHub OAUTH
+
+```mermaid
+sequenceDiagram
+    participant U as 用户
+    participant A as 你的图床应用
+    participant G as GitHub
+    
+    Note over U,G: 身份确认四重验证
+    
+    U->>A: 想绑定自己的仓库
+    A->>G: ① 请求OAuth认证
+    G->>U: ② 要求GitHub登录
+    U->>G: ③ 输入GitHub凭证
+    G->>G: ④ 验证用户身份
+    
+    alt 验证通过
+        G->>A: ⑤ 返回用户唯一ID和Token
+        A->>G: ⑥ 用Token验证仓库权限
+        G->>A: ⑦ 返回权限信息
+        
+        alt 有仓库权限
+            A->>U: ⑧ ✅ 确认是本人，绑定成功
+        else 无仓库权限
+            A->>U: ⑧ ❌ 非仓库所有者
+        end
+    else 验证失败
+        G->>U: ⑤ ❌ 认证失败
+    end
+```

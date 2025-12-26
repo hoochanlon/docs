@@ -8,6 +8,7 @@ import starlightImageZoom from 'starlight-image-zoom';
 import starlightThemeGalaxy from 'starlight-theme-galaxy';
 import starlightThemeRapide from 'starlight-theme-rapide';
 import starlightThemeFlexoki from 'starlight-theme-flexoki';
+import mermaid from 'astro-mermaid';
 
 // https://astro.build/config
 export default defineConfig({
@@ -34,7 +35,12 @@ export default defineConfig({
       noExternal: ['@astrojs/starlight'],
     },
   },
-    integrations: [expressiveCode(), starlight({
+    integrations: [
+      mermaid({
+        theme: 'forest',
+        autoTheme: true
+      }),
+      expressiveCode(), starlight({
         plugins: [
           starlightImageZoom(),
           // starlightThemeFlexoki(),
@@ -85,6 +91,12 @@ export default defineConfig({
                 ],
             },
             {
+                label: 'Mermaid 原理图',
+                items: [
+                    { label: '项目应用技术原理图 （一）', slug: 'mermaid/mermaid-myproject-1' },                    
+                ],
+            },
+            {
                 label: 'Astro-Starlight',
                 items: [
                     { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
@@ -100,9 +112,9 @@ export default defineConfig({
                 ],
             },
             {
-                label: 'fumadocs',
+                label: 'Fumadocs',
                 items: [
-                    { label: 'fumadocs 简要配置', slug: 'fumadocs/fumadocs-example' },
+                    { label: 'Fumadocs 简要配置', slug: 'fumadocs/fumadocs-example' },
                 ],
             },
         ],
