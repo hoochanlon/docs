@@ -54,3 +54,35 @@ git reset --hard HEAD^
 ```shell
 git pull origin main
 ```
+
+
+## clone
+
+:::tip
+核心目的：最小化下载。
+:::
+
+
+```shell
+# 1. 克隆仓库元数据，不下载文件内容
+git clone --filter=blob:none --no-checkout https://github.com/hoochanlon/picx-images-hosting.git
+
+# 2. 进入仓库目录
+cd picx-images-hosting
+
+# 3. 设置稀疏检出规则：包含所有文件，排除imgs目录
+git sparse-checkout set --no-cone '/*' '!/imgs/*'
+
+# 4. 检出主分支（根据实际分支名选择main或master）
+git checkout main
+```
+
+浅克隆
+
+```shell
+# 下载最近1次提交
+git clone --depth 1 <仓库URL>
+
+# 浅克隆+单分支（更高效）
+git clone --depth 1 --single-branch <仓库URL>
+```
