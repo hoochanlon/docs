@@ -85,6 +85,12 @@ export default defineConfig({
                 ],
             },
             {
+                label: '非蠢既坏的 MacOS',
+                items: [
+                    { label: '沉浸在自己的世界，自以为是的 MacOS', slug: 'awful-mac/mac-cmd' },                        
+                ],
+            },
+            {
                 label: '便利工具收集',
                 items: [
                     { label: '像只仓鼠囤积我的数字工具', slug: 'tools/hamster' },                    
