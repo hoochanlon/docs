@@ -7,7 +7,7 @@ import PasswordWrapper from '@components/PasswordWrapper.astro';
 
 <PasswordWrapper password="123456" passwordSubtitle="密码：123456">
 
-# 这是加密的内容
+## 这是加密的内容
 
 这段内容只有在输入正确密码后才能查看。
 
@@ -16,11 +16,6 @@ import PasswordWrapper from '@components/PasswordWrapper.astro';
 - 支持在 front-matter 中定义密码
 - 客户端加密/解密
 - 自动保存密码到 localStorage
-
-## 使用方法
-
-在 MDX 文件的 front-matter 中添加 `password` 字段，然后使用 `PasswordWrapper` 组件包装需要加密的内容。
-
 
 </PasswordWrapper>
 
