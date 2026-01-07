@@ -93,7 +93,7 @@ export default defineConfig({
             {
                 label: '非蠢既坏的 MacOS',
                 items: [
-                    { label: '沉浸在自己的世界，自以为是的 MacOS', slug: 'awful-mac/mac-cmd' },                        
+                    { label: '面向开放 MacOS 的一小步', slug: 'awful-mac/mac-cmd' },                        
                 ],
             },
             {

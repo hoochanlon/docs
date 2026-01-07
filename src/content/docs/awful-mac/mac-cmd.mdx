@@ -1,6 +1,23 @@
 ---
-title: "向后兼容性极差的 Mac CMD"
+title: "面向开放 MacOS 的一小步"
 ---
+
+## 关闭 SIP
+
+SIP 是 System Integrity Protection 的简写，译为系统完整性保护。目的是为了限制 root 账户对系统的完全控制权，也叫 Rootless 保护机制。Mac 系统中 SIP 状态默认是开启的。
+
+终端输入 `csrutil status` 即可看到 SIP 的状态是 disable 还是 enable 。
+
+**关闭或开启 SIP**
+
+1. 重启 Mac ，按住 Command + R 直到屏幕上出现苹果的标志和进度条 ，进入 Recovery 模式 ；
+2. 在屏幕上方的工具栏找到并打开终端，输入命令 `csrutil disable` ；
+3. 关掉终端，重启 Mac ；
+4. 重启以后可以在终端中查看状态确认 。
+
+开启 SIP 只需在上面第 2 步命令改为 `csrutil enable`，具体操作见附件。
+
+[苹果M芯片的MAC的SIP如何关闭？M1 MAC关闭Sip方法教程分享！（适用于M1 M2 M3）.zip](https://github.com/user-attachments/files/24414169/M.MAC.SIP.M1.MAC.Sip.M1.M2.M3.zip)
 
 
 ## 允许任何来源
@@ -15,4 +32,24 @@ sudo spctl --master-disable
 
 ![](https://cdn.jsdelivr.net/gh/hoochanlon/picx-images-hosting@master/imgs/uploads/2025/PixPin_2025-12-31_23-08-32.png)
 
-## 
+完成后，前往“系统设置”>“隐私与安全性”>“安全性”，勾选“任何来源”。
+
+## “文件损坏扔入废纸篓”
+
+清除应用的隔离属性
+
+```
+xattr -cr 
+```
+
+```
+sudo xattr -d com.apple.quarantine 
+```
+
+```
+# 二选一
+sudo xattr -d com.apple.quarantine /Applications/应用名称.app
+xattr -cr /Applications/应用名称.app
+```
+
+
