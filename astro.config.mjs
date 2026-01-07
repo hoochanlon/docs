@@ -81,6 +81,7 @@ export default defineConfig({
                 label: '现代软件开发实践杂谈',
                 items: [
                     { label: '从脚本到产品：我的跨平台开发之旅', slug: 'dev-talk/script-to-app' },
+                    { label: '软件推广三维对比：技术圈、核心区与流量海', slug: 'dev-talk/cross-platform-promotion-analysis' },
                 ],
             },
             {
