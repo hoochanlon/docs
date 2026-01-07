@@ -29,6 +29,7 @@ export default defineConfig({
     resolve: {
       alias: {
         '@components': new URL('./src/components', import.meta.url).pathname,
+        '@': new URL('./src', import.meta.url).pathname,
       },
     },
     ssr: {
@@ -115,6 +116,7 @@ export default defineConfig({
                     { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
                     { label: 'Astro-Starlight 扩展', slug: 'astro-starlight/starlight-writing-extensions'},
                     { label: 'Astro-Starlight 写作脚本', slug: 'astro-starlight/astro-starlight-scripts' },
+                    { label: 'Astro-Starlight 加密内容示例', slug: 'astro-starlight/astro-starlight-encrypted' },
                 ],
             },
             {

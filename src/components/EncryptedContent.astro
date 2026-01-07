@@ -1,0 +1,29 @@
+---
+import PasswordWrapper from './PasswordWrapper.astro';
+
+export interface Props {
+  entry: {
+    data: {
+      password?: string;
+      passwordSubtitle?: string;
+      [key: string]: any;
+    };
+    [key: string]: any;
+  };
+}
+
+const { entry } = Astro.props;
+
+// 从 entry 中获取 front-matter 数据
+const password = entry?.data?.password;
+const passwordSubtitle = entry?.data?.passwordSubtitle;
+---
+
+{password ? (
+  <PasswordWrapper password={password} passwordSubtitle={passwordSubtitle}>
+    <slot />
+  </PasswordWrapper>
+) : (
+  <slot />
+)}
+
