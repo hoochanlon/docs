@@ -17,7 +17,7 @@ const encryptedHtml = await encrypt(html, password);
 <meta name="robots" content="noindex, nofollow" />
 <meta name="starlight:search" content="exclude" />
 
-<div id="encryption" class="password-container" data-search-exclude="true" data-noindex="true" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; min-height: 400px !important; padding: 2rem !important; text-align: center !important; visibility: visible !important; opacity: 1 !important; width: 100% !important;">
+<div id="encryption" class="password-container" data-search-exclude="true" data-noindex="true" style="display: none !important; visibility: hidden !important; opacity: 0 !important;">
   <!-- 锁图标 -->
   <div class="password-icon">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -74,11 +74,35 @@ const encryptedHtml = await encrypt(html, password);
 </div>
 
 <script is:inline data-astro-rerun>
-  // 立即确保密码容器可见 - 在页面加载时立即执行
+  // 在页面加载的最早时机检查是否有保存的密码，如果有则立即隐藏加密界面
   (function() {
-    function ensureVisible() {
-      const encryption = document.getElementById("encryption");
-      if (encryption && encryption.classList.contains("password-container")) {
+    const key = window.location.pathname;
+    function getItemWithExpire(key) {
+      try {
+        const itemStr = localStorage.getItem(key);
+        if (!itemStr) return null;
+        const item = JSON.parse(itemStr);
+        if (new Date().getTime() > item.expire) {
+          localStorage.removeItem(key);
+          return null;
+        }
+        return item.value;
+      } catch {
+        return null;
+      }
+    }
+    
+    // 立即检查是否有保存的密码
+    const savedPassword = getItemWithExpire(key);
+    const encryption = document.getElementById("encryption");
+    
+    if (savedPassword) {
+      // 如果有保存的密码，保持隐藏状态（初始就是隐藏的）
+      // 不需要做任何操作，加密界面会保持隐藏
+    } else {
+      // 如果没有保存的密码，显示加密界面
+      if (encryption) {
+        encryption.classList.add("show");
         encryption.style.cssText = `
           display: flex !important;
           flex-direction: column !important;
@@ -93,18 +117,6 @@ const encryptedHtml = await encrypt(html, password);
         `;
       }
     }
-    // 立即执行
-    ensureVisible();
-    // DOM 加载完成后再次执行
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', ensureVisible);
-    } else {
-      ensureVisible();
-    }
-    // 延迟执行确保覆盖任何后续样式
-    setTimeout(ensureVisible, 0);
-    setTimeout(ensureVisible, 100);
-    setTimeout(ensureVisible, 300);
   })();
 
   /**
@@ -202,19 +214,24 @@ const encryptedHtml = await encrypt(html, password);
     input.style.pointerEvents = "auto";
     btn.style.pointerEvents = "auto";
 
-    // 立即强制设置密码容器可见 - 必须在所有操作之前
-    article.style.cssText = `
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      min-height: 400px !important;
-      padding: 2rem !important;
-      text-align: center !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      width: 100% !important;
-    `;
+    // 检查是否有保存的密码，如果没有则显示加密界面
+    const hasSavedPassword = getItemWithExpire(key);
+    if (!hasSavedPassword) {
+      // 如果没有保存的密码，显示加密界面
+      article.classList.add("show");
+      article.style.cssText = `
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 400px !important;
+        padding: 2rem !important;
+        text-align: center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100% !important;
+      `;
+    }
 
     // 隐藏目录（Table of Contents）的函数
     const hideTOC = () => {
@@ -386,6 +403,14 @@ const encryptedHtml = await encrypt(html, password);
 
       try {
         const html = await decrypt(encrypted, password);
+        
+        // 停止所有监控和定时器，避免干扰和残影
+        if (observer) observer.disconnect();
+        if (hideTOCInterval) {
+          clearInterval(hideTOCInterval);
+          hideTOCInterval = null;
+        }
+        
         // 移除密码容器的样式类，恢复为正常内容容器
         article.classList.remove("password-container");
         // 移除搜索排除标记
@@ -395,11 +420,10 @@ const encryptedHtml = await encrypt(html, password);
         article.style.cssText = "";
         article.innerHTML = html;
         
-        // 恢复目录显示
+        // 恢复目录显示 - 完全清除样式
         const hiddenElements = document.querySelectorAll('[data-encrypted-hidden="true"]');
         hiddenElements.forEach(el => {
-          el.style.display = "";
-          el.style.visibility = "";
+          el.style.cssText = ""; // 使用 cssText 完全清除所有样式
           el.removeAttribute('data-encrypted-hidden');
         });
         
@@ -440,16 +464,71 @@ const encryptedHtml = await encrypt(html, password);
       }
     });
 
-    // 延迟自动解密，确保页面先渲染
-    const savedPassword = getItemWithExpire(key);
-    if (savedPassword && encrypted) {
-      input.value = savedPassword;
-      // 使用更长的延迟，确保页面完全渲染后再解密
-      setTimeout(() => {
-        if (btn && !btn.disabled) {
-          btn.click();
+    // 自动解密：如果有保存的密码，立即解密（避免显示加密界面）
+    const autoDecryptPassword = getItemWithExpire(key);
+    if (autoDecryptPassword && encrypted) {
+      // 加密界面应该已经在脚本开头被隐藏了，这里确保隐藏（双重保险）
+      article.style.opacity = "0";
+      article.style.visibility = "hidden";
+      article.style.transition = "none";
+      
+      // 立即执行解密，不等待
+      (async () => {
+        try {
+          const html = await decrypt(encrypted, autoDecryptPassword);
+          // 移除密码容器的样式类，恢复为正常内容容器
+          article.classList.remove("password-container");
+          // 移除搜索排除标记
+          article.removeAttribute("data-search-exclude");
+          article.removeAttribute("data-noindex");
+          // 重置所有内联样式，让内容使用默认的 Starlight 样式
+          article.style.cssText = "";
+          article.style.opacity = "1";
+          article.style.visibility = "visible";
+          article.innerHTML = html;
+          
+          // 恢复目录显示
+          const hiddenElements = document.querySelectorAll('[data-encrypted-hidden="true"]');
+          hiddenElements.forEach(el => {
+            el.style.cssText = "";
+            el.removeAttribute('data-encrypted-hidden');
+          });
+          
+          // 恢复页面标题左对齐
+          const pageTitle = document.querySelector("h1");
+          if (pageTitle) {
+            pageTitle.style.textAlign = "";
+          }
+          
+          // 移除 noindex meta 标签
+          const noindexMeta = document.querySelector("meta[name='robots'][content*='noindex']");
+          if (noindexMeta) {
+            noindexMeta.setAttribute("content", "index, follow");
+          }
+          
+          // 移除搜索排除标记
+          document.documentElement.removeAttribute('data-search-exclude');
+          const searchExcludeMeta = document.querySelector("meta[name='starlight:search']");
+          if (searchExcludeMeta) {
+            searchExcludeMeta.remove();
+          }
+          
+          // 停止所有监控和定时器
+          if (observer) observer.disconnect();
+          if (hideTOCInterval) {
+            clearInterval(hideTOCInterval);
+            hideTOCInterval = null;
+          }
+        } catch (e) {
+          // 如果自动解密失败，显示加密界面
+          article.classList.add("show");
+          article.style.opacity = "1";
+          article.style.visibility = "visible";
+          article.style.transition = "";
+          article.style.display = "flex";
+          input.value = autoDecryptPassword;
         }
-      }, 100);
+      })();
     }
   }
 
