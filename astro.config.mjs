@@ -78,6 +78,12 @@ export default defineConfig({
                 ],
             },
             {
+                label: '现代软件开发实践杂谈',
+                items: [
+                    { label: '从脚本到产品：我的跨平台开发之旅', slug: 'dev-talk/script-to-app' },
+                ],
+            },
+            {
                 label: '常用的命令备忘',
                 items: [
                     { label: 'git 常用命令', slug: 'cmd/git-cmd' },    

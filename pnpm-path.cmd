@@ -1,0 +1,1 @@
+export PATH="/c/Users/hooch/AppData/Roaming/npm:$PATH"
