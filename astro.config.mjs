@@ -81,15 +81,16 @@ export default defineConfig({
             {
                 label: '现代软件开发实践杂谈',
                 items: [
-                    { label: '从脚本到产品：我的跨平台开发之旅', slug: 'dev-talk/script-to-app' },
-                    { label: '软件推广三维对比：技术圈、核心区与流量海', slug: 'dev-talk/cross-platform-promotion-analysis' },
+                  { label: '从脚本到产品：我的跨平台开发之旅', slug: 'dev-talk/script-to-app' },
+                  { label: '软件推广三维对比：技术圈、核心区与流量海', slug: 'dev-talk/cross-platform-promotion-analysis' },
+                  { label: '书签过载问题', slug: 'dev-talk/when-bookmarks-become-noise' },
                 ],
             },
             {
                 label: '常用的命令备忘',
                 items: [
                     { label: 'git 常用命令', slug: 'cmd/git-cmd' },    
-                      { label: '项目常用命令', slug: 'cmd/project-cmd' },                    
+                    { label: '项目常用命令', slug: 'cmd/project-cmd' },                    
                 ],
             },
             {
@@ -101,7 +102,7 @@ export default defineConfig({
             {
                 label: '便利工具收集',
                 items: [
-                    { label: '像只仓鼠囤积我的数字工具', slug: 'tools/hamster' },                    
+                    { label: '像只仓鼠囤积工具（归档）', slug: 'tools/hamster' },                    
                 ],
             },
             {
