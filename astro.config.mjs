@@ -82,8 +82,8 @@ export default defineConfig({
                 label: '现代软件开发实践杂谈',
                 items: [
                   { label: '从脚本到产品：我的跨平台开发之旅', slug: 'dev-talk/script-to-app' },
-                  { label: '软件推广三维对比：技术圈、核心区与流量海', slug: 'dev-talk/cross-platform-promotion-analysis' },
-                  { label: '书签过载问题', slug: 'dev-talk/when-bookmarks-become-noise' },
+                  { label: '技术社区与项目推广的冷思考', slug: 'dev-talk/tech-community-promotion-and-the-github-stars-bubble' },
+                  { label: '网页书签信息过载问题', slug: 'dev-talk/when-bookmarks-become-noise' },
                 ],
             },
             {
