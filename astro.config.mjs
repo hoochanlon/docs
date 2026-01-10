@@ -71,6 +71,15 @@ export default defineConfig({
                 ],
             },
             {
+                label: 'Astro-Starlight',
+                items: [
+                    { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
+                    { label: 'Astro-Starlight 扩展', slug: 'astro-starlight/starlight-writing-extensions'},
+                    { label: 'Astro-Starlight 写作脚本', slug: 'astro-starlight/astro-starlight-scripts' },
+                    { label: 'Astro-Starlight 加密内容示例', slug: 'astro-starlight/astro-starlight-encrypted' },
+                ],
+            },
+            {
                 label: '文本及用语规范',
                 items: [
                     { label: '电子书层级内容用语约定', slug: 'writing-standards/ebook-content-guidelines' },
@@ -100,39 +109,12 @@ export default defineConfig({
                 ],
             },
             {
-                label: '便利工具收集',
-                items: [
-                    { label: '像只仓鼠囤积工具（归档）', slug: 'tools/hamster' },                    
-                ],
-            },
-            {
                 label: 'Mermaid 原理图',
                 items: [
                     { label: '项目应用技术原理图 （一）', slug: 'mermaid/mermaid-myproject-1' },                    
                 ],
             },
-            {
-                label: 'Astro-Starlight',
-                items: [
-                    { label: 'Astro-Starlight 简要配置', slug: 'astro-starlight/astro-starlight-example' },
-                    { label: 'Astro-Starlight 扩展', slug: 'astro-starlight/starlight-writing-extensions'},
-                    { label: 'Astro-Starlight 写作脚本', slug: 'astro-starlight/astro-starlight-scripts' },
-                    { label: 'Astro-Starlight 加密内容示例', slug: 'astro-starlight/astro-starlight-encrypted' },
-                ],
-            },
-            {
-                label: 'Astro-Paper',
-                items: [
-                    { label: 'Astro-Paper 简要配置', slug: 'astro-paper/astro-paper-example' },
-                    { label: 'Astro-Paper 写作脚本', slug: 'astro-paper/astro-paper-scripts' },
-                ],
-            },
-            {
-                label: 'Fumadocs',
-                items: [
-                    { label: 'Fumadocs 简要配置', slug: 'fumadocs/fumadocs-example' },
-                ],
-            },
+
         ],
         }), markdoc()],
 });
