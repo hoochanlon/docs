@@ -92,7 +92,9 @@ export default defineConfig({
                 items: [
                   { label: '从编写脚本到打造产品的历程', slug: 'dev-talk/script-to-app' },
                   { label: '技术社区与项目推广的冷思考', slug: 'dev-talk/tech-community-promotion-and-the-github-stars-bubble' },
-                  { label: '网页书签信息过载问题', slug: 'dev-talk/when-bookmarks-become-noise' },
+                  { label: '网页书签信息过载问题', slug: 'dev-talk/bookmark-talk' },
+                  { label: '谈谈软件开发成本与付费收益', slug: 'dev-talk/pay-talk' },
+                  { label: '为了什么写文档？', slug: 'dev-talk/doc-talk' },
                 ],
             },
             {
